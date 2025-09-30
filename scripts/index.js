@@ -25,3 +25,7 @@ const initialCards = [
     link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
   },
 ];
+
+initialCards.forEach(function (card) {
+  console.log(card.name);
+});
