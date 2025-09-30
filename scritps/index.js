@@ -1,0 +1,1 @@
+console.log('creando la configuracion inicial')
