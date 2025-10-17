@@ -29,3 +29,29 @@ const initialCards = [
 initialCards.forEach(function (card) {
   console.log(card.name);
 });
+
+// Seleccionar los elementos del DOM
+const editButton = document.querySelector(".profile__edit-button");
+const editPopup = document.querySelector("#edit-popup");
+const closeButtons = document.querySelectorAll(".popup__close");
+
+// Función para abrir el popup
+function openPopup(popup) {
+  popup.classList.add("popup_opened");
+}
+
+// Función para cerrar el popup
+function closePopup(popup) {
+  popup.classList.remove("popup_opened");
+}
+
+// Abrir el modal al hacer clic en "Editar"
+editButton.addEventListener("click", () => {
+  openPopup(editPopup);
+});
+
+// Cerrar el modal al hacer clic en la "X"
+closeButtons.forEach((button) => {
+  const popup = button.closest(".popup");
+  button.addEventListener("click", () => closePopup(popup));
+});
