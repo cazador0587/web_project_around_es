@@ -3,6 +3,11 @@ const editProfileButton = document.querySelector(".profile__edit-button");
 const editProfileModal = document.querySelector("#edit-popup");
 const closeModalButton = editProfileModal.querySelector(".popup__close");
 
+const profileName = document.querySelector(".profile__name");
+const profileDescription = document.querySelector(".profile__description");
+const nameInput = document.querySelector(".popup__input_type_name");
+const descriptionInput = document.querySelector(".popup__input_type_description");
+
 console.log("creando la configuracion inicial");
 const initialCards = [
   {
@@ -45,12 +50,21 @@ function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
 
+function fillProfileForm() {
+  nameInput.value = profileName.textContent;
+  descriptionInput.value = profileDescription.textContent;
+}
+
+function handleOpenEditModal() {
+  fillProfileForm();
+  openModal(editModal);
+}
+
 // Evento para abrir el modal al hacer clic en "Editar perfil"
-editProfileButton.addEventListener("click", function () {
-  openModal(editProfileModal);
-});
+editProfileButton.addEventListener("click", handleOpenEditModal);
 
 // Evento para cerrar el modal al hacer clic en el botón de cerrar (X)
 closeModalButton.addEventListener("click", function () {
   closeModal(editProfileModal);
 });
+
