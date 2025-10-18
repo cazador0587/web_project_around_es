@@ -1,7 +1,7 @@
 // Seleccionar los elementos del DOM
-const editButton = document.querySelector(".profile__edit-button");
-const editPopup = document.querySelector("#edit-popup");
-const closeButtons = document.querySelectorAll(".popup__close");
+const editProfileButton = document.querySelector(".profile__edit-button");
+const editProfileModal = document.querySelector("#edit-popup");
+const closeModalButton = editProfileModal.querySelector(".popup__close");
 
 console.log("creando la configuracion inicial");
 const initialCards = [
@@ -35,23 +35,22 @@ initialCards.forEach(function (card) {
   console.log(card.name);
 });
 
-// Función para abrir el popup
-function openPopup(popup) {
-  popup.classList.add("popup_is-opened");
+// Función reutilizable: abrir modal
+function openModal(modal) {
+  modal.classList.add("popup_is-opened");
 }
 
-// Función para cerrar el popup
-function closePopup(popup) {
-  popup.classList.remove("popup_is-opened");
+// Función reutilizable: cerrar modal
+function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
 }
 
-// Abrir el modal al hacer clic en "Editar"
-editButton.addEventListener("click", () => {
-  openPopup(editPopup);
+// Evento para abrir el modal al hacer clic en "Editar perfil"
+editProfileButton.addEventListener("click", function () {
+  openModal(editProfileModal);
 });
 
-// Cerrar el modal al hacer clic en la "X"
-closeButtons.forEach((button) => {
-  const popup = button.closest(".popup");
-  button.addEventListener("click", () => closePopup(popup));
+// Evento para cerrar el modal al hacer clic en el botón de cerrar (X)
+closeModalButton.addEventListener("click", function () {
+  closeModal(editProfileModal);
 });
