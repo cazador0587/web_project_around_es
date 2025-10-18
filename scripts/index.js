@@ -1,4 +1,5 @@
 //document.addEventListener("DOMContentLoaded", function () {
+  
   // Seleccionar los elementos del DOM
   const editProfileButton = document.querySelector(".profile__edit-button");
   const editProfileModal = document.querySelector("#edit-popup");
@@ -8,6 +9,10 @@
   const profileDescription = document.querySelector(".profile__description");
   const nameInput = document.querySelector(".popup__input_type_name");
   const descriptionInput = document.querySelector(".popup__input_type_description");
+  
+  // 1️⃣ Seleccionamos el formulario
+  const editProfileForm = document.querySelector("#edit-profile-form");
+
 
   console.log("creando la configuracion inicial");
   const initialCards = [
@@ -60,11 +65,31 @@
     console.log("✅ handleOpenEditModal ejecutada");
     fillProfileForm();
     openModal(editProfileModal);
-  }
+}
+  
+// 2️⃣ Definimos la función manejadora del evento submit
+  function handleProfileFormSubmit(evt) {
+    evt.preventDefault(); // Evita el comportamiento por defecto (recargar la página)
+
+  // Obtenemos los valores del formulario
+  const newName = nameInput.value;
+  const newDescription = descriptionInput.value;
+
+  // Actualizamos el contenido del perfil
+  profileTitle.textContent = newName;
+  profileDescription.textContent = newDescription;
+
+  // Cerramos el modal
+  closeModal(editProfileModal);
+}
+  
   console.log(editProfileButton, editProfileModal);
 
   // Evento para abrir el modal al hacer clic en "Editar perfil"
   editProfileButton.addEventListener("click", handleOpenEditModal);
+
+  // 3️⃣ Vinculamos la función al evento 'submit' del formulario
+  editProfileForm.addEventListener("submit", handleProfileFormSubmit);
 
   // Evento para cerrar el modal al hacer clic en el botón de cerrar (X)
   closeModalButton.addEventListener("click", function () {
