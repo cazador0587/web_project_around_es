@@ -1,4 +1,9 @@
-console.log('creando la configuracion inicial')
+// Seleccionar los elementos del DOM
+const editButton = document.querySelector(".profile__edit-button");
+const editPopup = document.querySelector("#edit-popup");
+const closeButtons = document.querySelectorAll(".popup__close");
+
+console.log("creando la configuracion inicial");
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -30,19 +35,14 @@ initialCards.forEach(function (card) {
   console.log(card.name);
 });
 
-// Seleccionar los elementos del DOM
-const editButton = document.querySelector(".profile__edit-button");
-const editPopup = document.querySelector("#edit-popup");
-const closeButtons = document.querySelectorAll(".popup__close");
-
 // Función para abrir el popup
 function openPopup(popup) {
-  popup.classList.add("popup_opened");
+  popup.classList.add("popup_is-opened");
 }
 
 // Función para cerrar el popup
 function closePopup(popup) {
-  popup.classList.remove("popup_opened");
+  popup.classList.remove("popup_is-opened");
 }
 
 // Abrir el modal al hacer clic en "Editar"
