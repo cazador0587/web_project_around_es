@@ -68,7 +68,32 @@ const cardTemplate = document.querySelector("#card-template").content;
   closeModal(editProfileModal);
 }
   
-  console.log(editProfileButton, editProfileModal);
+console.log(editProfileButton, editProfileModal);
+  
+function createCard({
+  name = "Sin título",
+  link = "./images/placeholder.jpg",})
+{
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+
+  cardImage.src = link;
+  cardImage.alt = name;
+  cardTitle.textContent = name;
+
+  return cardElement;
+}
+
+function renderCards() {
+  initialCards.forEach((cardData) => {
+    const card = createCard(cardData);
+    cardsContainer.append(card);
+  });
+}
+
+renderCards();
+
 
   // Evento para abrir el modal al hacer clic en "Editar perfil"
   editProfileButton.addEventListener("click", handleOpenEditModal);
