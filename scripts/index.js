@@ -16,21 +16,69 @@ const editProfileForm = document.querySelector("#edit-profile-form");
 const cardsContainer = document.querySelector(".cards__list");
 const cardTemplate = document.querySelector("#card-template").content;
 
-
   console.log("creando la configuracion inicial");
   const initialCards = [
-    { name: "Valle de Yosemite", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg", },
-    { name: "Lago Louise", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg", },
-    { name: "Montañas Calvas", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg", },
-    { name: "Latemar", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",},
-    { name: "Parque Nacional de la Vanoise", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg", },
-    { name: "Lago di Braies", link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg", },
+    {
+      name: "Valle de Yosemite",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
+    {
+      name: "Lago Louise",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
+    {
+      name: "Montañas Calvas",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
+    {
+      name: "Latemar",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
+    {
+      name: "Parque Nacional de la Vanoise",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
+    {
+      name: "Lago di Braies",
+      link: "https://placehold.co/282x282/0063d2/white",
+    },
   ];
 
-  initialCards.forEach(function (card) {
-    console.log(card.name);
+/** ---------------------------------Card-------------------------------------------------------------------- */
+// Función para crear una tarjeta a partir de un objeto con name y link
+function getCardElement(name = "Sin título", link = "./images/placeholder.jpg") {
+  // Clonamos el contenido del template
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  // Seleccionamos los elementos internos de la tarjeta
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+  // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
+  const likeButton = cardElement.querySelector(".card__like-button");
+
+  // Asignamos los valores dinámicos
+  cardImage.src = link;
+  cardImage.alt = name;
+  cardTitle.textContent = name;
+
+  // Añadimos el listener que toggles (alterna) la clase de activo
+  likeButton.addEventListener("click", () => {
+    // La clase 'card__like-button_is-active' es la que le da el estilo lleno
+    likeButton.classList.toggle("card__like-button_is-active");
   });
 
+  // Retornamos el elemento completamente configurado
+  return cardElement;
+}
+
+function renderInitialCards(cardsData, container) {
+  cardsData.forEach((cardData) => {
+    const newCard = getCardElement(cardData.name, cardData.link);
+    container.append(newCard);
+  });
+}
+/**---------------------------------------Card--------------------------------------------------------------------- */
+
+/** --------------------------------Modal---------------------------------------------------------- */
   // Función reutilizable: abrir modal
   function openModal(modal) {
     modal.classList.add("popup_is-opened");
@@ -69,31 +117,11 @@ const cardTemplate = document.querySelector("#card-template").content;
 }
   
 console.log(editProfileButton, editProfileModal);
-  
-function createCard({
-  name = "Sin título",
-  link = "./images/placeholder.jpg",})
-{
-  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
-  const cardImage = cardElement.querySelector(".card__image");
-  const cardTitle = cardElement.querySelector(".card__title");
+/** -------------------------------fIN modal------------------------------------------------------------- */
 
-  cardImage.src = link;
-  cardImage.alt = name;
-  cardTitle.textContent = name;
-
-  return cardElement;
-}
-
-function renderCards() {
-  initialCards.forEach((cardData) => {
-    const card = createCard(cardData);
-    cardsContainer.append(card);
-  });
-}
-
-renderCards();
-
+/**  ---------------------------------Evento Modal------------------------------------------------------------ */
+// Llama a la función para que el proceso de renderizado inicie.
+renderInitialCards(initialCards, cardsContainer); 
 
   // Evento para abrir el modal al hacer clic en "Editar perfil"
   editProfileButton.addEventListener("click", handleOpenEditModal);
@@ -106,3 +134,4 @@ renderCards();
     closeModal(editProfileModal);
   });
 //});
+/** ------------------------------------------------------------------------------------------------------- */
