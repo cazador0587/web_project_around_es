@@ -15,16 +15,19 @@
   
   // Contenedor y template de tarjetas
   const cardsContainer = document.querySelector(".cards__list");
-  const cardTemplate = document.querySelector("#card-template").content;
+const cardTemplate = document
+  .querySelector("#card-template")
+  .content
+  .querySelector(".card");
 
   // 🔹 Botón para abrir el popup "Agregar una tarjeta"
   const addCardButton = document.querySelector(".profile__add-button");
   // 🔹 Ventana emergente (popup) para agregar una tarjeta
-  const addCardModal = document.querySelector("#add-card-popup");
+  const addCardModal = document.querySelector("#new-card-popup");
   // 🔹 Botón para cerrar la ventana de agregar tarjeta
   const closeAddCardButton = addCardModal.querySelector(".popup__close");
   // 🔹 Formulario dentro de la ventana emergente
-  const addCardForm = document.querySelector("#add-card-form");
+  const addCardForm = document.querySelector("#new-card-form");
   // 🔹 Campos del formulario
   const cardNameInput = addCardForm.querySelector(".popup__input_type_card-name");
   const cardLinkInput = addCardForm.querySelector(".popup__input_type_card-link");
@@ -63,7 +66,7 @@ console.log("creando la configuracion inicial");
 // Función para crear una tarjeta a partir de un objeto con name y link
 function getCardElement(name = "Sin título", link = "./images/placeholder.jpg") {
   // Clonamos el contenido del template
-  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const cardElement = cardTemplate.cloneNode(true);
   // Seleccionamos los elementos internos de la tarjeta
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
