@@ -11,11 +11,23 @@
   const descriptionInput = document.querySelector(".popup__input_type_description");
   
   // 1️⃣ Seleccionamos el formulario
-const editProfileForm = document.querySelector("#edit-profile-form");
+  const editProfileForm = document.querySelector("#edit-profile-form");
   
   // Contenedor y template de tarjetas
-const cardsContainer = document.querySelector(".cards__list");
-const cardTemplate = document.querySelector("#card-template").content;
+  const cardsContainer = document.querySelector(".cards__list");
+  const cardTemplate = document.querySelector("#card-template").content;
+
+  // 🔹 Botón para abrir el popup "Agregar una tarjeta"
+  const addCardButton = document.querySelector(".profile__add-button");
+  // 🔹 Ventana emergente (popup) para agregar una tarjeta
+  const addCardModal = document.querySelector("#add-card-popup");
+  // 🔹 Botón para cerrar la ventana de agregar tarjeta
+  const closeAddCardButton = addCardModal.querySelector(".popup__close");
+  // 🔹 Formulario dentro de la ventana emergente
+  const addCardForm = document.querySelector("#add-card-form");
+  // 🔹 Campos del formulario
+  const cardNameInput = addCardForm.querySelector(".popup__input_type_card-name");
+  const cardLinkInput = addCardForm.querySelector(".popup__input_type_card-link");
 
 console.log("creando la configuracion inicial");
   
@@ -123,21 +135,47 @@ initialCards.forEach((cardData) => {
 }
   
 console.log(editProfileButton, editProfileModal);
+
+function handleCardFormSubmit(evt) {
+  evt.preventDefault(); // Evita que se recargue la página
+
+  // Obtenemos los valores del formulario
+  const name = cardNameInput.value;
+  const link = cardLinkInput.value;
+
+  // Creamos la nueva tarjeta
+  const newCard = getCardElement(name, link);
+
+  // La agregamos como primer elemento en el contenedor
+  cardsContainer.prepend(newCard);
+
+  // Limpiamos el formulario
+  addCardForm.reset();
+
+  // Cerramos el modal
+  closeModal(addCardModal);
+}
 /** -------------------------------fIN modal------------------------------------------------------------- */
 
-/**  ---------------------------------Evento Modal------------------------------------------------------------ */
-// Llama a la función para que el proceso de renderizado inicie.
-//renderInitialCards(initialCards, cardsContainer); 
-
+/**  ---------------------------------Eventos de los Modales------------------------------------------------------------ */
   // Evento para abrir el modal al hacer clic en "Editar perfil"
+  // ✏️ Modal Editar perfil
   editProfileButton.addEventListener("click", handleOpenEditModal);
-
   // 3️⃣ Vinculamos la función al evento 'submit' del formulario
   editProfileForm.addEventListener("submit", handleProfileFormSubmit);
-
   // Evento para cerrar el modal al hacer clic en el botón de cerrar (X)
-  closeModalButton.addEventListener("click", function () {
-    closeModal(editProfileModal);
+  closeModalButton.addEventListener("click", () => closeModal(editProfileModal));
+  
+  // ➕ Modal Agregar tarjeta
+  // 🟢 Abrir la ventana "Agregar tarjeta"
+  addCardButton.addEventListener("click", () => {
+    openModal(addCardModal);
+  });
+  // 🟢 Detectar el envío del formulario "Agregar tarjeta"
+  addCardForm.addEventListener("submit", handleCardFormSubmit);
+  // 🔴 Cerrar la ventana "Agregar tarjeta"
+  closeAddCardButton.addEventListener("click", () => {
+    closeModal(addCardModal);
   });
 //});
 /** ------------------------------------------------------------------------------------------------------- */
