@@ -13,10 +13,13 @@
   // 1️⃣ Seleccionamos el formulario
 const editProfileForm = document.querySelector("#edit-profile-form");
   
+  // Contenedor y template de tarjetas
 const cardsContainer = document.querySelector(".cards__list");
 const cardTemplate = document.querySelector("#card-template").content;
 
-  console.log("creando la configuracion inicial");
+console.log("creando la configuracion inicial");
+  
+  // Datos iniciale
   const initialCards = [
     {
       name: "Valle de Yosemite",
@@ -52,14 +55,14 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
   // Seleccionamos los elementos internos de la tarjeta
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
-  // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
-  const likeButton = cardElement.querySelector(".card__like-button");
 
   // Asignamos los valores dinámicos
   cardImage.src = link;
   cardImage.alt = name;
   cardTitle.textContent = name;
 
+  // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
+  const likeButton = cardElement.querySelector(".card__like-button");
   // Añadimos el listener que toggles (alterna) la clase de activo
   likeButton.addEventListener("click", () => {
     // La clase 'card__like-button_is-active' es la que le da el estilo lleno
@@ -70,12 +73,15 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
   return cardElement;
 }
 
-function renderInitialCards(cardsData, container) {
-  cardsData.forEach((cardData) => {
-    const newCard = getCardElement(cardData.name, cardData.link);
-    container.append(newCard);
-  });
+// ✅ // Inserta una tarjeta en el contenedor renderCard
+function renderCard(name, link, container) {
+  const newCard = getCardElement(name, link);
+  container.append(newCard);
 }
+// ✅ // Renderiza todas las tarjetas iniciales
+initialCards.forEach((cardData) => {
+  renderCard(cardData.name, cardData.link, cardsContainer);
+});
 /**---------------------------------------Card--------------------------------------------------------------------- */
 
 /** --------------------------------Modal---------------------------------------------------------- */
@@ -121,7 +127,7 @@ console.log(editProfileButton, editProfileModal);
 
 /**  ---------------------------------Evento Modal------------------------------------------------------------ */
 // Llama a la función para que el proceso de renderizado inicie.
-renderInitialCards(initialCards, cardsContainer); 
+//renderInitialCards(initialCards, cardsContainer); 
 
   // Evento para abrir el modal al hacer clic en "Editar perfil"
   editProfileButton.addEventListener("click", handleOpenEditModal);
