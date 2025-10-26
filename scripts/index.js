@@ -17,8 +17,8 @@
   const cardsContainer = document.querySelector(".cards__list");
 const cardTemplate = document
   .querySelector("#card-template")
-  .content
-  .querySelector(".card");
+  .content;
+  //.querySelector(".card");
 
   // 🔹 Botón para abrir el popup "Agregar una tarjeta"
   const addCardButton = document.querySelector(".profile__add-button");
@@ -66,26 +66,28 @@ console.log("creando la configuracion inicial");
 // Función para crear una tarjeta a partir de un objeto con name y link
 function getCardElement(name = "Sin título", link = "./images/placeholder.jpg") {
   // Clonamos el contenido del template
-  const cardElement = cardTemplate.cloneNode(true);
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   // Seleccionamos los elementos internos de la tarjeta
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
+  // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
+  const likeButton = cardElement.querySelector(".card__like-button");
 
   // Asignamos los valores dinámicos
   cardImage.src = link;
   cardImage.alt = name;
   cardTitle.textContent = name;
 
-  // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
-  const likeButton = cardElement.querySelector(".card__like-button");
-  // Añadimos el listener que toggles (alterna) la clase de activo
-  likeButton.addEventListener("click", () => {
-    // La clase 'card__like-button_is-active' es la que le da el estilo lleno
-    likeButton.classList.toggle("card__like-button_is-active");
-  });
+  // 💖 Asignamos el manejador de "Me gusta"
+  likeButton.addEventListener("click", handleLikeButton);
 
   // Retornamos el elemento completamente configurado
   return cardElement;
+}
+
+function handleLikeButton(evt) {
+  const likeButton = evt.target;
+  likeButton.classList.toggle("card__like-button_is-active");
 }
 
 // ✅ // Inserta una tarjeta en el contenedor renderCard
