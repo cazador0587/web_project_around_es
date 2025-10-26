@@ -40,7 +40,7 @@ const cardTemplate = document.querySelector("#card-template").content;
     },
     {
       name: "Lago di Braies",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
     },
   ];
 
