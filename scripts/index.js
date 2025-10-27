@@ -58,7 +58,7 @@ console.log("creando la configuracion inicial");
     },
     {
       name: "Lago di Braies",
-      link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
+      link: "https://placehold.co/282x282/0063d2/white",
     },
   ];
 
@@ -72,6 +72,7 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
   const cardTitle = cardElement.querySelector(".card__title");
   // 🌟 NUEVO: Selecciona el botón de "Me Gusta"
   const likeButton = cardElement.querySelector(".card__like-button");
+  const deleteButton = cardElement.querySelector(".card__delete-button");
 
   // Asignamos los valores dinámicos
   cardImage.src = link;
@@ -81,6 +82,9 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
   // 💖 Asignamos el manejador de "Me gusta"
   likeButton.addEventListener("click", handleLikeButton);
 
+  // 🗑️ Botón Eliminar
+  deleteButton.addEventListener("click", handleDeleteCard);
+
   // Retornamos el elemento completamente configurado
   return cardElement;
 }
@@ -88,6 +92,11 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
 function handleLikeButton(evt) {
   const likeButton = evt.target;
   likeButton.classList.toggle("card__like-button_is-active");
+}
+
+function handleDeleteCard(evt) {
+  const cardToDelete = evt.target.closest(".card");
+  cardToDelete.remove();
 }
 
 // ✅ // Inserta una tarjeta en el contenedor renderCard
