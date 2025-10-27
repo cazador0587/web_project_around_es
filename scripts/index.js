@@ -15,11 +15,9 @@
   
   // Contenedor y template de tarjetas
   const cardsContainer = document.querySelector(".cards__list");
-const cardTemplate = document
+  const cardTemplate = document
   .querySelector("#card-template")
   .content;
-  //.querySelector(".card");
-
   // 🔹 Botón para abrir el popup "Agregar una tarjeta"
   const addCardButton = document.querySelector(".profile__add-button");
   // 🔹 Ventana emergente (popup) para agregar una tarjeta
@@ -30,7 +28,14 @@ const cardTemplate = document
   const addCardForm = document.querySelector("#new-card-form");
   // 🔹 Campos del formulario
   const cardNameInput = addCardForm.querySelector(".popup__input_type_card-name");
-  const cardLinkInput = addCardForm.querySelector(".popup__input_type_card-link");
+const cardLinkInput = addCardForm.querySelector(".popup__input_type_card-link");
+  
+// 🖼️ Popup para ver imágenes
+const imageModal = document.querySelector("#image-popup");
+const imageModalCloseButton = imageModal.querySelector(".popup__close");
+const imageModalImage = imageModal.querySelector(".popup__image");
+const imageModalCaption = imageModal.querySelector(".popup__caption");
+
 
 console.log("creando la configuracion inicial");
   
@@ -85,6 +90,8 @@ function getCardElement(name = "Sin título", link = "./images/placeholder.jpg")
   // 🗑️ Botón Eliminar
   deleteButton.addEventListener("click", handleDeleteCard);
 
+  cardImage.addEventListener("click", () => handleImageClick(name, link));
+
   // Retornamos el elemento completamente configurado
   return cardElement;
 }
@@ -97,6 +104,13 @@ function handleLikeButton(evt) {
 function handleDeleteCard(evt) {
   const cardToDelete = evt.target.closest(".card");
   cardToDelete.remove();
+}
+
+function handleImageClick(name, link) {
+  imageModalImage.src = link;
+  imageModalImage.alt = name;
+  imageModalCaption.textContent = name;
+  openModal(imageModal);
 }
 
 // ✅ // Inserta una tarjeta en el contenedor renderCard
@@ -179,6 +193,7 @@ function handleCardFormSubmit(evt) {
   editProfileForm.addEventListener("submit", handleProfileFormSubmit);
   // Evento para cerrar el modal al hacer clic en el botón de cerrar (X)
   closeModalButton.addEventListener("click", () => closeModal(editProfileModal));
+  imageModalCloseButton.addEventListener("click", () => closeModal(imageModal));
   
   // ➕ Modal Agregar tarjeta
   // 🟢 Abrir la ventana "Agregar tarjeta"
@@ -191,5 +206,6 @@ function handleCardFormSubmit(evt) {
   closeAddCardButton.addEventListener("click", () => {
     closeModal(addCardModal);
   });
+
 //});
 /** ------------------------------------------------------------------------------------------------------- */
