@@ -209,3 +209,64 @@ function handleCardFormSubmit(evt) {
 
 //});
 /** ------------------------------------------------------------------------------------------------------- */
+/******************************** Mostrar Error en un input ************************************************/
+function showInputError(formElement, inputElement) {
+  const errorElement = formElement.querySelector(`.${inputElement.name}-error`);
+
+  inputElement.classList.add("popup__input_type_error");
+  errorElement.textContent = inputElement.validationMessage;
+}
+/******************************** Ocultar error ************************************************/
+function hideInputError(formElement, inputElement) {
+  const errorElement = formElement.querySelector(`.${inputElement.name}-error`);
+
+  inputElement.classList.remove("popup__input_type_error");
+  errorElement.textContent = "";
+}
+/******************************** Checar si un input es válido ************************************************/
+function checkInputValidity(formElement, inputElement) {
+  if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement);
+  } else {
+    hideInputError(formElement, inputElement);
+  }
+}
+/************************ Revisar si el formulario tiene algún input inválido **************************************/
+function hasInvalidInput(inputList) {
+  return inputList.some((input) => !input.validity.valid);
+}
+/******************************** Activar/desactivar botón Guardar ************************************************/
+function toggleButtonState(inputList, buttonElement) {
+  if (hasInvalidInput(inputList)) {
+    buttonElement.classList.add("popup__save-button_disabled");
+    buttonElement.disabled = true;
+  } else {
+    buttonElement.classList.remove("popup__save-button_disabled");
+    buttonElement.disabled = false;
+  }
+}
+/******************************** Activar validación en un formulario ************************************************/
+function setEventListeners(formElement) {
+  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  const buttonElement = formElement.querySelector(".popup__button");
+
+  toggleButtonState(inputList, buttonElement);
+
+  inputList.forEach((inputElement) => {
+    inputElement.addEventListener("input", () => {
+      checkInputValidity(formElement, inputElement);
+      toggleButtonState(inputList, buttonElement);
+    });
+  });
+}
+/******************************** Activar validación en todos los formularios del proyecto ************************************************/
+function enableValidation() {
+  const formList = Array.from(document.querySelectorAll(".popup__form"));
+
+  formList.forEach((formElement) => {
+    formElement.setAttribute("novalidate", true);
+    setEventListeners(formElement);
+  });
+}
+
+enableValidation(); // ACTIVAMOS VALIDACIÓN
