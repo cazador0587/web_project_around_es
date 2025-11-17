@@ -49,22 +49,31 @@
           <button
             aria-label="Cerrar ventana emergente"
             class="popup__close"
-            type="button"
-          ></button>
+            type="button">
+          </button>
           <h3 class="popup__title">Editar perfil</h3>
-          <form class="popup__form" id="edit-profile-form">
+          <form 
+            class="popup__form" 
+            id="edit-profile-form"
+            name="edit-profile"
+            novalidate>
             <input
               class="popup__input popup__input_type_name"
               name="name"
+              required
+              minlength="2"
+              maxlength="40"
               placeholder="Nombre"
-              type="text"
-            />
+              type="text"/>
+            <span class="popup__error name-error"></span>
             <input
               class="popup__input popup__input_type_description"
               name="description"
+              required
+              minlength="2"
+              maxlength="200"
               placeholder="Acerca de mí"
-              type="text"
-            />
+              type="text"/>
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
