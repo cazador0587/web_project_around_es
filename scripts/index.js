@@ -307,7 +307,9 @@ cardLinkInput.addEventListener("input", () => {
 // Inicializar estado del botón al abrir el modal
 addCardButton.addEventListener("click", () => {
   addCardForm.reset();
-  toggleAddCardButtonState();
+  //toggleAddCardButtonState();
+  // 1. Llamar a resetValidation para limpiar errores y establecer el botón
+  resetValidation(addCardForm);
   openModal(addCardModal);
 });
 
@@ -328,3 +330,27 @@ document.addEventListener("keydown", (evt) => {
   }
 });
 
+/******************************** Restablecer Validación ************************************************/
+// Asumiendo que 'validationConfig' es un objeto global si tienes más ajustes (si no, lo definimos internamente)
+function resetValidation(formElement) {
+  // 1. Obtener la lista de inputs y el botón del formulario
+  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  const buttonElement = formElement.querySelector(".popup__button");
+
+  // 2. Recorrer la lista de inputs y ocultar cualquier mensaje de error
+  inputList.forEach((inputElement) => {
+    // Usamos la función que ya definiste para ocultar el error visual
+    hideInputError(formElement, inputElement);
+  });
+  
+  // 3. Establecer el estado inicial del botón (inactivo si el formulario no es válido)
+  // Como el formulario está recién abierto, no debería ser válido si tiene campos vacíos
+  toggleButtonState(inputList, buttonElement);
+}
+
+function handleOpenEditModal() {
+  console.log("✅ handleOpenEditModal ejecutada");
+  fillProfileForm();
+  resetValidation(editProfileForm); // <-- Llama aquí para limpiar
+  openModal(editProfileModal);
+}
