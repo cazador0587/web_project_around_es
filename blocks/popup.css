@@ -95,6 +95,15 @@
   pointer-events: none;
 }
 
+.popup__button_disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+
 .popup__input:last-of-type {
   margin-bottom: 0;
 }
@@ -147,16 +156,6 @@
     margin-top: 46px;
     height: 46px;
   }
-
-  .popup__button_disabled {
-  opacity: 0.5;
-  cursor: default;
-  pointer-events: none;
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #000;
-}
-
 
   .popup__close {
     right: 7px;

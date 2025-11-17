@@ -69,7 +69,7 @@ console.log("creando la configuracion inicial");
 
 /** ---------------------------------Card-------------------------------------------------------------------- */
 // Función para crear una tarjeta a partir de un objeto con name y link
-function getCardElement(name = "Sin título", link = "./images/placeholder.jpg") {
+function getCardElement(name, link) {
   // Clonamos el contenido del template
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   // Seleccionamos los elementos internos de la tarjeta
@@ -278,3 +278,36 @@ function enableValidation() {
 }
 
 enableValidation(); // ACTIVAMOS VALIDACIÓN
+/******************************** FIN VALIDACIÓN DE FORMULARIOS ************************************************/
+// ---------------- VALIDACIÓN DEL FORMULARIO "NUEVO LUGAR" ----------------
+
+// Seleccionamos el botón guardar del formulario "Nueva tarjeta"
+const addCardSubmitButton = addCardForm.querySelector(".popup__button");
+
+// Función para verificar si el formulario es válido
+function toggleAddCardButtonState() {
+  if (addCardForm.checkValidity()) {
+    addCardSubmitButton.disabled = false;
+    addCardSubmitButton.classList.remove("popup__button_disabled");
+  } else {
+    addCardSubmitButton.disabled = true;
+    addCardSubmitButton.classList.add("popup__button_disabled");
+  }
+}
+
+// Eventos de validación para ambos campos
+cardNameInput.addEventListener("input", () => {
+  toggleAddCardButtonState();
+});
+
+cardLinkInput.addEventListener("input", () => {
+  toggleAddCardButtonState();
+});
+
+// Inicializar estado del botón al abrir el modal
+addCardButton.addEventListener("click", () => {
+  addCardForm.reset();
+  toggleAddCardButtonState();
+  openModal(addCardModal);
+});
+

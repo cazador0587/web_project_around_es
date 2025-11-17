@@ -83,10 +83,10 @@
           <button
             aria-label="Cerrar ventana emergente"
             class="popup__close"
-            type="button"
-          ></button>
+            type="button">
+          </button>
           <h3 class="popup__title">Nuevo lugar</h3>
-          <form class="popup__form" id="new-card-form">
+          <form class="popup__form" id="new-card-form" novalidate>
             <input
               class="popup__input popup__input_type_card-name"
               name="place-name"
@@ -95,14 +95,14 @@
               minlength="2"
               maxlength="30"
               type="text"/>
+            <span class="popup__error place-name-error"></span>
             <input
               class="popup__input popup__input_type_url"
               name="link"
               placeholder="Enlace a la imagen"
               required
               type="url"/>
-              <span class="popup__error" id="card-name-error"></span>
-              <span class="popup__error" id="card-link-error"></span>
+              <span class="popup__error link-error"></span>
             <button class="button popup__button" type="submit">Crear</button>
           </form>
         </div>
