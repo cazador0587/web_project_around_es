@@ -76,6 +76,25 @@
   margin-bottom: 10px;
 }
 
+.popup__input_type_error {
+  border-bottom-color: red;
+}
+
+.popup__error {
+  color: red;
+  font-size: 12px;
+  display: block;
+  height: 14px;
+}
+
+.popup__save-button_disabled {
+  background-color: #e5e5e5;
+  color: #b8b8b8;
+  border: none;
+  cursor: default;
+  pointer-events: none;
+}
+
 .popup__input:last-of-type {
   margin-bottom: 0;
 }
