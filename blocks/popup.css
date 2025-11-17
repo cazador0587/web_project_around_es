@@ -87,6 +87,10 @@
   height: 14px;
 }
 
+.popup__error_visible {
+  opacity: 1;
+}
+
 .popup__save-button_disabled {
   background-color: #e5e5e5;
   color: #b8b8b8;

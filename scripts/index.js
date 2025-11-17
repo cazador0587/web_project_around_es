@@ -28,7 +28,7 @@
   const addCardForm = document.querySelector("#new-card-form");
   // 🔹 Campos del formulario
   const cardNameInput = addCardForm.querySelector(".popup__input_type_card-name");
-const cardLinkInput = addCardForm.querySelector(".popup__input_type_card-link");
+const cardLinkInput = addCardForm.querySelector(".popup__input_type_url");
   
 // 🖼️ Popup para ver imágenes
 const imageModal = document.querySelector("#image-popup");
@@ -279,8 +279,8 @@ function enableValidation() {
 
 enableValidation(); // ACTIVAMOS VALIDACIÓN
 /******************************** FIN VALIDACIÓN DE FORMULARIOS ************************************************/
-// ---------------- VALIDACIÓN DEL FORMULARIO "NUEVO LUGAR" ----------------
 
+// ---------------- VALIDACIÓN DEL FORMULARIO "NUEVO LUGAR" ----------------
 // Seleccionamos el botón guardar del formulario "Nueva tarjeta"
 const addCardSubmitButton = addCardForm.querySelector(".popup__button");
 
@@ -309,5 +309,22 @@ addCardButton.addEventListener("click", () => {
   addCardForm.reset();
   toggleAddCardButtonState();
   openModal(addCardModal);
+});
+
+// Cerrar popup al hacer clic en la superposición (overlay)
+document.querySelectorAll(".popup").forEach((popup) => {
+  popup.addEventListener("click", (evt) => {
+    // Si el clic NO se hace dentro del contenido, entonces cierra
+    if (!evt.target.closest(".popup__content")) {
+      closeModal(popup);
+    }
+  });
+});
+
+document.addEventListener("keydown", (evt) => {
+  if (evt.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+    if (openedPopup) closeModal(openedPopup);
+  }
 });
 
