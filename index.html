@@ -92,15 +92,17 @@
               name="place-name"
               placeholder="Título"
               required
-              type="text"
-            />
+              minlength="2"
+              maxlength="30"
+              type="text"/>
             <input
               class="popup__input popup__input_type_url"
               name="link"
               placeholder="Enlace a la imagen"
               required
-              type="url"
-            />
+              type="url"/>
+              <span class="popup__error" id="card-name-error"></span>
+              <span class="popup__error" id="card-link-error"></span>
             <button class="button popup__button" type="submit">Crear</button>
           </form>
         </div>

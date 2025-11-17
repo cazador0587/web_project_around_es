@@ -43,27 +43,27 @@ console.log("creando la configuracion inicial");
   const initialCards = [
     {
       name: "Valle de Yosemite",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
     },
     {
       name: "Lago Louise",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
     },
     {
       name: "Montañas Calvas",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg",
     },
     {
       name: "Latemar",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",
     },
     {
       name: "Parque Nacional de la Vanoise",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
     },
     {
       name: "Lago di Braies",
-      link: "https://placehold.co/282x282/0063d2/white",
+      link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
     },
   ];
 
@@ -209,6 +209,14 @@ function handleCardFormSubmit(evt) {
 
 //});
 /** ------------------------------------------------------------------------------------------------------- */
+/******************************** VALIDACIÓN DE FORMULARIOS ************************************************/
+/*
+  La validación de formularios integrada en el navegador utiliza los atributos HTML5 para definir reglas de validación 
+  directamente en los elementos del formulario. Esto permite que el navegador verifique automáticamente
+  si los datos ingresados cumplen con los criterios especificados antes de permitir el envío del formulario.
+  Si los datos no cumplen con las reglas, el navegador bloquea el envío y muestra mensajes de error predeterminados.
+  Esta funcionalidad mejora la experiencia del usuario al proporcionar retroalimentación inmediata sobre errores de entrada sin necesidad de JavaScript adicional. 
+*/
 /******************************** Mostrar Error en un input ************************************************/
 function showInputError(formElement, inputElement) {
   const errorElement = formElement.querySelector(`.${inputElement.name}-error`);
