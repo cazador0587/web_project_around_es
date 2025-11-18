@@ -68,12 +68,12 @@
             <span class="popup__error name-error"></span>
             <input
               class="popup__input popup__input_type_description"
-              name="description"
-              required
+              name="description" required
               minlength="2"
               maxlength="200"
               placeholder="Acerca de mí"
               type="text"/>
+            <span class="popup__error description-error"></span>
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
@@ -119,6 +119,8 @@
         </div>
       </div>
     </div>
-    <script src="./scripts/index.js" defer></script>
+    <!--<script src="./scripts/index.js" defer></script>-->
+    <script type="module" src="./scripts/validate.js"></script> 
+    <script type="module" src="./scripts/index.js"></script>
   </body>
 </html>
