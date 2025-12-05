@@ -88,3 +88,34 @@ function handleImageClick(name, link) {
   imageViewCaption.textContent = name;
   openModal(modalImageView);
 }
+
+// --- Inicialización de la Lógica de Validación ---
+
+// Instancia de FormValidator para el formulario de Perfil
+const profileValidator = new FormValidator(validationConfig, formEditProfile);
+profileValidator.setEventListeners();
+
+// Instancia de FormValidator para el formulario de Nueva Tarjeta
+const newCardValidator = new FormValidator(validationConfig, formAddCard);
+newCardValidator.setEventListeners();
+
+// --- Controladores de Eventos del Proyecto ---
+
+// 1. Manejo de la Modal de Edición de Perfil
+buttonEditProfile.addEventListener('click', () => {
+  // Llenar inputs con datos actuales antes de abrir
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileJob.textContent;
+
+  // Asegurar que la validación se reinicia (oculta errores y habilita/deshabilita el botón)
+  profileValidator.resetValidation(); 
+
+  openModal(modalEditProfile);
+});
+
+formEditProfile.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  profileName.textContent = nameInput.value;
+  profileJob.textContent = jobInput.value;
+  closeModal(modalEditProfile);
+});
