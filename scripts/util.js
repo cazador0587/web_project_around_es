@@ -21,3 +21,13 @@ export function closeModalOnEsc(evt) {
     }
   }
 }
+
+// Controlador de eventos para cerrar la modal al hacer click en el overlay o en el botón de cerrar
+export function setModalCloseListeners(modalElement) {
+  modalElement.addEventListener('click', (evt) => {
+    // Si se hace click en el overlay (el propio elemento modal) o en el botón de cerrar
+    if (evt.target.classList.contains('modal') || evt.target.classList.contains('modal__close-button')) {
+      closeModal(modalElement);
+    }
+  });
+}
