@@ -119,3 +119,44 @@ formEditProfile.addEventListener('submit', (evt) => {
   profileJob.textContent = jobInput.value;
   closeModal(modalEditProfile);
 });
+
+// 2. Manejo de la Modal de Añadir Tarjeta
+buttonAddCard.addEventListener('click', () => {
+  formAddCard.reset(); // Limpia los inputs
+
+  // Reinicia la validación (oculta errores y deshabilita el botón)
+  newCardValidator.resetValidation();
+
+  openModal(modalAddCard);
+});
+
+formAddCard.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  
+  const cardNameInput = formAddCard.querySelector('#card-name-input');
+  const cardLinkInput = formAddCard.querySelector('#card-link-input');
+
+  const newCardData = {
+    name: cardNameInput.value,
+    link: cardLinkInput.value
+  };
+
+  const newCardElement = createCard(newCardData);
+  cardsContainer.prepend(newCardElement); // Añade la nueva tarjeta al principio
+  
+  closeModal(modalAddCard);
+  formAddCard.reset(); // Reinicia el formulario
+});
+
+// 3. Cierre de Modales Universal
+// Configura los listeners de clic de overlay y botón de cerrar para todas las modales
+setModalCloseListeners(modalEditProfile);
+setModalCloseListeners(modalAddCard);
+setModalCloseListeners(modalImageView);
+
+
+// --- Renderizado Inicial de Tarjetas ---
+initialCards.forEach((cardData) => {
+  const cardElement = createCard(cardData);
+  cardsContainer.append(cardElement);
+});
