@@ -72,3 +72,19 @@ const profileJob = document.querySelector('.profile__job');
 // Elementos de la modal de imagen
 const imageViewImage = modalImageView.querySelector('.image-view__image');
 const imageViewCaption = modalImageView.querySelector('.image-view__caption');
+
+// --- Funciones de Lógica de la Tarjeta ---
+
+// Función que crea e inserta una tarjeta
+function createCard(data) {
+  const card = new Card(data, templateSelector, handleImageClick);
+  return card.generateCard();
+}
+
+// Handler para el clic en la imagen (pasa a la clase Card)
+function handleImageClick(name, link) {
+  imageViewImage.src = link;
+  imageViewImage.alt = name;
+  imageViewCaption.textContent = name;
+  openModal(modalImageView);
+}
