@@ -21,7 +21,7 @@ export class Card {
 
   // 3. Método privado para el controlador de eventos "Like"
   _handleLikeIcon() {
-    this._likeButton.classList.toggle("card__like-button_active");
+    this._likeButton.classList.toggle("card__like-button_is-active");
   }
 
   // 4. Método privado para el controlador de eventos "Delete"
@@ -35,22 +35,28 @@ export class Card {
   _setEventListeners() {
     // Botón de Like
     this._likeButton = this._element.querySelector(".card__like-button");
-    this._likeButton.addEventListener("click", () => {
-      this._handleLikeIcon();
-    });
+    if (this._likeButton) {
+      this._likeButton.addEventListener("click", () => {
+        this._handleLikeIcon();
+      });
+    }
 
     // Botón de Eliminar
     this._deleteButton = this._element.querySelector(".card__delete-button");
-    this._deleteButton.addEventListener("click", () => {
-      this._handleDeleteCard();
-    });
+    if (this._deleteButton) {
+      this._deleteButton.addEventListener("click", () => {
+        this._handleDeleteCard();
+      });
+    }
 
     // Imagen (para abrir la ventana modal con la imagen grande)
     this._cardImage = this._element.querySelector(".card__image");
-    this._cardImage.addEventListener("click", () => {
-      // Usa el callback para manejar la apertura de la modal de imagen
-      this._handleImageClick(this._name, this._link);
-    });
+    if (this._cardImage) {
+      this._cardImage.addEventListener("click", () => {
+        // Usa el callback para manejar la apertura de la modal de imagen
+        this._handleImageClick(this._name, this._link);
+      });
+    }
   }
 
   // 6. Método público que devuelve el elemento card completamente funcional

@@ -5,6 +5,8 @@ import { Card } from "./card.js";
 import { FormValidator } from "./formValidator.js";
 import { openModal, closeModal, setModalCloseListeners } from "./util.js";
 
+// index.js (Línea 7)
+document.addEventListener("DOMContentLoaded", () => {
 // --- Constantes y Configuración ---
 
 // 1. Configuración de validación (debe coincidir con tus clases CSS)
@@ -71,7 +73,7 @@ const profileJob = document.querySelector('.profile__description');
 
 // Elementos de la modal de imagen
 const imageViewImage = modalImageView.querySelector('.popup__image');
-const imageViewCaption = modalImageView.querySelector(".profile__caption");
+const imageViewCaption = modalImageView.querySelector(".popup__caption");
 
 // --- Funciones de Lógica de la Tarjeta ---
 
@@ -136,7 +138,7 @@ formAddCard.addEventListener('submit', (evt) => {
   const cardNameInput = formAddCard.querySelector(
     ".popup__input_type_card-name"
   );
-  const cardLinkInput = formAddCard.querySelector("popup__input_type_url");
+  const cardLinkInput = formAddCard.querySelector(".popup__input_type_url");
 
   const newCardData = {
     name: cardNameInput.value,
@@ -162,3 +164,5 @@ initialCards.forEach((cardData) => {
   const cardElement = createCard(cardData);
   cardsContainer.append(cardElement);
 });
+// index.js (Última línea)
+}); // 👈 Cierra el listener de DOMContentLoaded
