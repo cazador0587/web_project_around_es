@@ -57,6 +57,7 @@ export class Card {
   generateCard() {
     // Obtiene el elemento de la plantilla
     this._element = this._getTemplate();
+    this._cardImage = this._element.querySelector(".card__image"); // Ahora this._cardImage no es undefined
 
     // Rellena la tarjeta con datos
     this._element.querySelector(".card__title").textContent = this._name;

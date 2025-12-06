@@ -15,9 +15,8 @@ export class FormValidator {
 
   // 2. Método privado para mostrar el mensaje de error
   _showInputError(inputElement) {
-    const errorElement = this._formElement.querySelector(
-      `.${inputElement.id}-error`
-    );
+    const errorElement = this._formElement.querySelector(`.${inputElement.name}-error`);
+    
     inputElement.classList.add(this._config.inputErrorClass);
     errorElement.textContent = inputElement.validationMessage;
     errorElement.classList.add(this._config.errorClass);
@@ -26,11 +25,13 @@ export class FormValidator {
   // 3. Método privado para ocultar el mensaje de error
   _hideInputError(inputElement) {
     const errorElement = this._formElement.querySelector(
-      `.${inputElement.id}-error`
+      `.${inputElement.name}-error`
     );
-    inputElement.classList.remove(this._config.inputErrorClass);
-    errorElement.classList.remove(this._config.errorClass);
-    errorElement.textContent = "";
+    if (errorElement) {
+      inputElement.classList.remove(this._config.inputErrorClass);
+      errorElement.classList.remove(this._config.errorClass);
+      errorElement.textContent = "";
+    }
   }
 
   // 4. Método privado para verificar la validez del campo (Check Validity)

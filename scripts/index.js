@@ -1,20 +1,20 @@
 // index.js
 
 // Importa las clases y utilidades
-import { Card } from "./Card.js";
-import { FormValidator } from "./FormValidator.js";
-import { openModal, closeModal, setModalCloseListeners } from "./utils.js";
+import { Card } from "./card.js";
+import { FormValidator } from "./formValidator.js";
+import { openModal, closeModal, setModalCloseListeners } from "./util.js";
 
 // --- Constantes y Configuración ---
 
 // 1. Configuración de validación (debe coincidir con tus clases CSS)
 const validationConfig = {
-  formSelector: ".modal__form",
-  inputSelector: ".modal__input",
-  submitButtonSelector: ".modal__save-button",
-  inactiveButtonClass: "modal__save-button_disabled",
-  inputErrorClass: "modal__input_type_error",
-  errorClass: "modal__error_visible",
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
 };
 
 // 2. Datos iniciales de las tarjetas
@@ -22,28 +22,28 @@ const initialCards = [
   // ... Tus 6 objetos de tarjetas aquí (e.g., { name: "Yosemite Valley", link: "..." })
   {
     name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/yosemite.jpg"
+    link: "./images/valle-yosemite.jpg",
   },
   {
     name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/lake-louise.jpg"
+    link: "./images/lago-louise.jpg",
   },
   {
     name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/bald-mountains.jpg"
+    link: "./images/montaña-calva.jpg",
   },
   {
     name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/latemar.jpg"
+    link: "./images/latemar.jpg",
   },
   {
     name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/vanoise.jpg"
+    link: "./images/parque-vanoise.jpg",
   },
   {
     name: "Lago Di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/images/lago.jpg"
-  }
+    link: "./images/lago-braies.jpg",
+  },
 ];
 
 // --- Elementos del DOM ---
@@ -51,27 +51,27 @@ const cardsContainer = document.querySelector('.cards__list');
 const templateSelector = '#card-template'; // Selector de la plantilla de la tarjeta
 
 // Modales
-const modalEditProfile = document.querySelector('#modal-edit-profile');
-const modalAddCard = document.querySelector('#modal-add-card');
-const modalImageView = document.querySelector('#modal-image-view');
+const modalEditProfile = document.querySelector('#edit-popup');
+const modalAddCard = document.querySelector('#new-card-popup');
+const modalImageView = document.querySelector('#image-popup');
 
 // Formularios
-const formEditProfile = modalEditProfile.querySelector('.modal__form');
-const formAddCard = modalAddCard.querySelector('.modal__form');
+const formEditProfile = modalEditProfile.querySelector('.popup__form');
+const formAddCard = modalAddCard.querySelector('.popup__form');
 
 // Botones
 const buttonEditProfile = document.querySelector('.profile__edit-button');
 const buttonAddCard = document.querySelector('.profile__add-button');
 
 // Campos del formulario de perfil
-const nameInput = document.querySelector('#profile-name-input');
-const jobInput = document.querySelector('#profile-job-input');
-const profileName = document.querySelector('.profile__name');
-const profileJob = document.querySelector('.profile__job');
+const nameInput = document.querySelector(".popup__input_type_name");
+const jobInput = document.querySelector(".popup__input_type_description");
+const profileName = document.querySelector(".profile__title");
+const profileJob = document.querySelector('.profile__description');
 
 // Elementos de la modal de imagen
-const imageViewImage = modalImageView.querySelector('.image-view__image');
-const imageViewCaption = modalImageView.querySelector('.image-view__caption');
+const imageViewImage = modalImageView.querySelector('.popup__image');
+const imageViewCaption = modalImageView.querySelector(".profile__caption");
 
 // --- Funciones de Lógica de la Tarjeta ---
 
@@ -133,8 +133,10 @@ buttonAddCard.addEventListener('click', () => {
 formAddCard.addEventListener('submit', (evt) => {
   evt.preventDefault();
   
-  const cardNameInput = formAddCard.querySelector('#card-name-input');
-  const cardLinkInput = formAddCard.querySelector('#card-link-input');
+  const cardNameInput = formAddCard.querySelector(
+    ".popup__input_type_card-name"
+  );
+  const cardLinkInput = formAddCard.querySelector("popup__input_type_url");
 
   const newCardData = {
     name: cardNameInput.value,
