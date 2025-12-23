@@ -1,6 +1,6 @@
 // FormValidator.js
 
-export class FormValidator {
+export default class FormValidator {
   // 1. Constructor: recibe la configuración de selectores y el elemento del formulario
   constructor(config, formElement) {
     this._config = config;
