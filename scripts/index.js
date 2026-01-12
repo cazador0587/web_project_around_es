@@ -1,5 +1,4 @@
 // index.js
-
 // Importa las clases y utilidades
 import Card from "./card.js";
 import Section from "./Section.js";
@@ -10,8 +9,7 @@ import FormValidator from "./formValidator.js";
 
 // index.js (Línea 7)
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Constantes y Configuración ---
-
+    // --- Constantes y Configuración ---
   // 1. Configuración de validación (debe coincidir con tus clases CSS)
   const validationConfig = {
     formSelector: ".popup__form",
@@ -56,17 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
   //const templateSelector = '#card-template'; // Selector de la plantilla de la tarjeta
 
   // Modales
-  const modalEditProfile = document.querySelector('#edit-popup');
-  const modalAddCard = document.querySelector('#new-card-popup');
+  const modalEditProfile = document.querySelector("#edit-popup");
+  const modalAddCard = document.querySelector("#new-card-popup");
   //const modalImageView = document.querySelector('#image-popup');
 
   // Formularios
-  const formEditProfile = modalEditProfile.querySelector('.popup__form');
-  const formAddCard = modalAddCard.querySelector('.popup__form');
+  const formEditProfile = modalEditProfile.querySelector(".popup__form");
+  const formAddCard = modalAddCard.querySelector(".popup__form");
 
   // Botones
-  const buttonEditProfile = document.querySelector('.profile__edit-button');
-  const buttonAddCard = document.querySelector('.profile__add-button');
+  const buttonEditProfile = document.querySelector(".profile__edit-button");
+  const buttonAddCard = document.querySelector(".profile__add-button");
 
   // Campos del formulario de perfil
   const nameInput = document.querySelector(".popup__input_type_name");
