@@ -24,21 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     errorClass: "popup__error_visible",
   };
 
-  //instancia de la API
-  const api = new Api(apiConfig);
-
-  api
-    .getUserInfo()
-    .then((data) => {
-      userInfo.setUserInfo({
-        name: data.name,
-        job: data.about,
-      });
-    })
-    .catch((err) => console.log(err));
-
   // 2. Datos iniciales de las tarjetas
-  const initialCards = [
+  /*const initialCards = [
     // ... Tus 6 objetos de tarjetas aquí (e.g., { name: "Yosemite Valley", link: "..." })
     {
       name: "Valle de Yosemite",
@@ -64,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       name: "Lago Di Braies",
       link: "./images/lago-braies.jpg",
     },
-  ];
+  ];*/
 
   // --- Elementos del DOM ---
   //const cardsContainer = document.querySelector('.cards__list');
@@ -93,6 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
   /*const imageViewImage = modalImageView.querySelector('.popup__image');
   const imageViewCaption = modalImageView.querySelector(".popup__caption");*/
 
+  //instancia de la API
+  const api = new Api(apiConfig);
+  
   // --- Funciones de Lógica de la Tarjeta ---
 
   // Función que crea e inserta una tarjeta
@@ -101,12 +91,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return card.generateCard();
   }*/
 
+  //Creación de instancias
+  const userInfo = new UserInfo({
+    nameSelector: ".profile__title",
+    jobSelector: ".profile__description",
+  });
+
   const imagePopup = new PopupWithImage("#image-popup");
   imagePopup.setEventListeners();
 
   const cardSection = new Section(
     {
-      items: initialCards,
+      items: [],
       renderer: (item) => {
         const card = new Card(item, "#card-template", (data) =>
           imagePopup.open(data)
@@ -117,10 +113,23 @@ document.addEventListener("DOMContentLoaded", () => {
     ".cards__list"
   );
 
-  const userInfo = new UserInfo({
-    nameSelector: ".profile__title",
-    jobSelector: ".profile__description",
-  });
+  //llamada a la API
+  api
+    .getUserInfo()
+    .then((data) => {
+      userInfo.setUserInfo({
+        name: data.name,
+        job: data.about,
+      });
+    })
+    .catch((err) => console.log(err));
+
+  api
+    .getInitialCards()
+    .then((cards) => {
+      cardSection.renderItems(cards);
+    })
+    .catch((err) => console.log(err));
 
   // --- Controladores de Eventos del Proyecto ---
 
@@ -172,5 +181,5 @@ document.addEventListener("DOMContentLoaded", () => {
     editProfilePopup.open();
   });
 
-  cardSection.renderItems();
+  //cardSection.renderItems();
 });
