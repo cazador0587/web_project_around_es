@@ -136,12 +136,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Controladores de Eventos del Proyecto ---
 
   // 1. Manejo de la Modal de Edición de Perfil
-  const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+  /*const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
     userInfo.setUserInfo({
       name: data.name,
       job: data.description,
     });
-  });
+  });*/
+
+const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
+  api
+    .updateUserInfo({
+      name: formData.name,
+      about: formData.description,
+    })
+    .then((userData) => {
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+      });
+      editProfilePopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
   editProfilePopup.setEventListeners();
 
@@ -159,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.log(err));
   });
   addCardPopup.setEventListeners();
-  
+
   /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     const card = new Card(data, "#card-template", (cardData) =>
       imagePopup.open(cardData)
