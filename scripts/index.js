@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //instancia de la API
   const api = new Api(apiConfig);
-  
+
   // --- Funciones de Lógica de la Tarjeta ---
 
   // Función que crea e inserta una tarjeta
@@ -95,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const userInfo = new UserInfo({
     nameSelector: ".profile__title",
     jobSelector: ".profile__description",
+    avatarSelector: ".profile__image",
   });
 
   const imagePopup = new PopupWithImage("#image-popup");
