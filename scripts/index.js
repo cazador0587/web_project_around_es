@@ -159,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.log(err));
   });
   addCardPopup.setEventListeners();
+  
   /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     const card = new Card(data, "#card-template", (cardData) =>
       imagePopup.open(cardData)
