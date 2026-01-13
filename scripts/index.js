@@ -30,7 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
   api
     .getUserInfo()
     .then((data) => {
-      console.log("Datos del servidor:", data);
+      userInfo.setUserInfo({
+        name: data.name,
+        job: data.about,
+      });
     })
     .catch((err) => console.log(err));
 
