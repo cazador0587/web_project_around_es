@@ -1,9 +1,7 @@
 // index.js
-// Importa la configuración de la API
+// Importa las clases y utilidades
 import Api from "./Api.js";
 import { apiConfig } from "./constants.js";
-
-// Importa las clases y utilidades
 import Card from "./card.js";
 import Section from "./Section.js";
 import PopupWithImage from "./PopupWithImage.js";
@@ -169,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   editProfilePopup.setEventListeners();
 
 
-  const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+  /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     api
       .addCard(data)
       .then((cardData) => {
@@ -183,7 +181,34 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((err) => console.log(err));
   });
   addCardPopup.setEventListeners();
+*/
+  
+  const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+    addCardPopup.renderLoading(true);
 
+    api
+      .addCard({
+        name: data["name"],
+        link: data.link,
+      })
+      .then((cardData) => {
+        const card = new Card(cardData, "#card-template", (cardInfo) =>
+          imagePopup.open(cardInfo)
+        );
+
+        cardSection.addItem(card.generateCard());
+        addCardPopup.close();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        addCardPopup.renderLoading(false);
+      });
+  });
+
+  addCardPopup.setEventListeners();
+  
   /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     const card = new Card(data, "#card-template", (cardData) =>
       imagePopup.open(cardData)

@@ -14,11 +14,14 @@ export default class FormValidator {
   }
 
   // 2. Método privado para mostrar el mensaje de error
-  _showInputError(inputElement) {
-    const errorElement = this._formElement.querySelector(`.${inputElement.name}-error`);
-    
-    inputElement.classList.add(this._config.inputErrorClass);
-    errorElement.textContent = inputElement.validationMessage;
+  _showInputError(inputElement, errorMessage) {
+    const errorElement = this._form.querySelector(
+      `.${inputElement.name}-error`
+    );
+
+    if (!errorElement) return;
+
+    errorElement.textContent = errorMessage;
     errorElement.classList.add(this._config.errorClass);
   }
 
