@@ -1,4 +1,8 @@
 // index.js
+// Importa la configuración de la API
+import Api from "./Api.js";
+import { apiConfig } from "./constants.js";
+
 // Importa las clases y utilidades
 import Card from "./card.js";
 import Section from "./Section.js";
@@ -9,7 +13,7 @@ import FormValidator from "./formValidator.js";
 
 // index.js (Línea 7)
 document.addEventListener("DOMContentLoaded", () => {
-    // --- Constantes y Configuración ---
+  // --- Constantes y Configuración ---
   // 1. Configuración de validación (debe coincidir con tus clases CSS)
   const validationConfig = {
     formSelector: ".popup__form",
@@ -19,6 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
     inputErrorClass: "popup__input_type_error",
     errorClass: "popup__error_visible",
   };
+
+  //instancia de la API
+  const api = new Api(apiConfig);
+
+  api
+    .getUserInfo()
+    .then((data) => {
+      console.log("Datos del servidor:", data);
+    })
+    .catch((err) => console.log(err));
 
   // 2. Datos iniciales de las tarjetas
   const initialCards = [
