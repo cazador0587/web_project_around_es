@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       userInfo.setUserInfo({
         name: data.name,
         job: data.about,
+        avatar: data.avatar,
       });
     })
     .catch((err) => console.log(err));
@@ -143,15 +144,32 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   editProfilePopup.setEventListeners();
+
   const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+    api
+      .addCard(data)
+      .then((cardData) => {
+        const card = new Card(cardData, "#card-template", (item) =>
+          imagePopup.open(item)
+        );
+
+        cardSection.addItem(card.generateCard());
+        addCardPopup.close();
+      })
+      .catch((err) => console.log(err));
+  });
+  addCardPopup.setEventListeners();
+  /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     const card = new Card(data, "#card-template", (cardData) =>
       imagePopup.open(cardData)
     );
 
     cardSection.addItem(card.generateCard());
   });
-  addCardPopup.setEventListeners();
 
+  addCardPopup.setEventListeners();
+  */
+  
   /*imagePopup.open({
    name: "Prueba",
    link: "https://placehold.co/600x400",
