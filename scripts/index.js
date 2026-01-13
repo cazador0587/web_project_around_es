@@ -143,25 +143,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });*/
 
-const editProfilePopup = new PopupWithForm("#edit-popup", (formData) => {
-  api
-    .updateUserInfo({
-      name: formData.name,
-      about: formData.description,
-    })
-    .then((userData) => {
-      userInfo.setUserInfo({
-        name: userData.name,
-        job: userData.about,
+  const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+    editProfilePopup.renderLoading(true);
+
+    api
+      .updateUserInfo({
+        name: data.name,
+        about: data.description,
+      })
+      .then((userData) => {
+        userInfo.setUserInfo({
+          name: userData.name,
+          job: userData.about,
+        });
+        editProfilePopup.close();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        editProfilePopup.renderLoading(false);
       });
-      editProfilePopup.close();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+  });
 
   editProfilePopup.setEventListeners();
+
 
   const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     api
