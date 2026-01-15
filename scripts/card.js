@@ -1,11 +1,14 @@
 // Card.js
 
 export default class Card {
-  constructor({ name, link }, cardSelector, handleCardClick) {
-    this._name = name;
-    this._link = link;
+  constructor(data, cardSelector, handleCardClick, handleLikeClick) {
+    this._name = data.name;
+    this._link = data.link;
+    this.id = data._id;
+    this._isLiked = data.isLiked || false;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
   }
 
   _getTemplate() {
@@ -17,7 +20,8 @@ export default class Card {
 
   _setEventListeners() {
     this._likeButton.addEventListener("click", () => {
-      this._likeButton.classList.toggle("card__like-button_is-active");
+      //this._likeButton.classList.toggle("card__like-button_is-active");
+      this._handleLikeClick(this);
     });
 
     this._deleteButton.addEventListener("click", () => {
@@ -45,7 +49,27 @@ export default class Card {
     this._title.textContent = this._name;
 
     this._setEventListeners();
+    this.toggleLike(this._isLiked);
+
 
     return this._element;
+  }
+
+  toggleLike(isLiked) {
+    this._isLiked = isLiked;
+
+    if (this._isLiked) {
+      this._likeButton.classList.add("card__like-button_active");
+    } else {
+      this._likeButton.classList.remove("card__like-button_active");
+    }
+  }
+
+  getId() {
+    return this._id;
+  }
+
+  isLiked() {
+    return this._isLiked;
   }
 }
