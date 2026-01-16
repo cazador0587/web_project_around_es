@@ -8,6 +8,7 @@ import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
 import UserInfo from "./UserInfo.js";
 import FormValidator from "./formValidator.js";
+import PopupWithConfirmation from "./PopupWithConfirmation.js";
 
 // index.js (Línea 7)
 document.addEventListener("DOMContentLoaded", () => {
@@ -88,6 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = new Card(data, templateSelector, handleImageClick);
     return card.generateCard();
   }*/
+  
+  const confirmPopup = new PopupWithConfirmation("#confirm-popup");
+  confirmPopup.setEventListeners();
+
 
   //Creación de instancias
   const userInfo = new UserInfo({
@@ -143,13 +148,26 @@ document.addEventListener("DOMContentLoaded", () => {
               })
           .catch(console.log);
         },
-        (cardInstance) => {
+        /*(cardInstance) => {
               api
                 .deleteCard(cardInstance.getId())
                 .then(() => {
                   cardInstance.removeCard();
                 })
               .catch((err) => console.log(err));
+          },*/
+        (cardInstance) => {
+           confirmPopup.open();
+
+            confirmPopup.setSubmitAction(() => {
+              api
+                .deleteCard(cardInstance.getId())
+                .then(() => {
+                  cardInstance.removeCard();
+                  confirmPopup.close();
+                })
+                .catch(console.log);
+            });
           },
           userId
         );

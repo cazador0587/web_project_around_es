@@ -123,6 +123,10 @@
   line-height: 30px;
 }
 
+#confirm-popup .popup__title {
+  color: #0d0d0d; /* blanco */
+}
+
 .popup_is-opened {
   display: flex;
   visibility: visible;
