@@ -139,12 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
               .catch((err) => console.log(err));*/
             request
               .then((updatedCard) => {
-                cardInstance.toggleLike(updatedCard.likes.some((user) => user._id === userId));
-          })
+                cardInstance.toggleLike(updatedCard.isLiked);
+              })
           .catch(console.log);
         },
-              (cardInstance) => {
-
+        (cardInstance) => {
               api
                 .deleteCard(cardInstance.getId())
                 .then(() => {
@@ -161,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   //llamada a la API
-  api
+  /*api
     .getUserInfo()
     .then((data) => {
       userId = data._id;
@@ -180,6 +179,20 @@ document.addEventListener("DOMContentLoaded", () => {
       cardSection.renderItems(cards);
     })
     .catch((err) => console.log(err));
+*/
+  Promise.all([api.getUserInfo(), api.getInitialCards()])
+    .then(([userData, cards]) => {
+      userId = userData._id;
+
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+        avatar: userData.avatar,
+      });
+
+      cardSection.renderItems(cards);
+    })
+    .catch(console.log);
 
   // --- Controladores de Eventos del Proyecto ---
 
@@ -251,9 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             request
               .then((updatedCard) => {
-                cardInstance.toggleLike(
-                  updatedCard.likes.some((user) => user._id === userId)
-                );
+                cardInstance.toggleLike(updatedCard.isLiked);
               })
               .catch(console.log);
           },
