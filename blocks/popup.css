@@ -175,13 +175,15 @@
 }
 
 #confirm-popup .popup__button {
+  width: auto;
   flex: 1;
   height: 44px;
-  border-radius: 20px;
+  border-radius: 22px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   border: none;
+  margin-top: 0;
 }
 
 #confirm-popup .popup__button:hover {
@@ -198,6 +200,8 @@
   background-color: #e74c3c;
   color: #fff;
   border: none;
+  width: 173px;
+  border-radius: 22px;
 }
 
 @media screen and (max-width: 544px) {
