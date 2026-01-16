@@ -22,8 +22,10 @@ export default class PopupWithConfirmation extends Popup {
       this._handleSubmit();
     });
 
-    this._cancelButton.addEventListener("click", () => {
-      this.close();
-    });
+    if (this._cancelButton) {
+      this._cancelButton.addEventListener("click", () => {
+        this.close();
+      });
+    }
   }
 }

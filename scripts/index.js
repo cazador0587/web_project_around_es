@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const imagePopup = new PopupWithImage("#image-popup");
   imagePopup.setEventListeners();
 
-  const cardSection = new Section(
+  /*const cardSection = new Section(
     {
       items: [],
       renderer: (item) => {
@@ -117,65 +117,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const request = isLiked
               ? api.removeLike(cardInstance.getId())
-              : api.addLike(cardInstance.getId());
+              : api.addLike(cardInstance.getId());*/
 
-            /*request
-              .then((updatedCard) => {
-                cardInstance.toggleLike(updatedCard.likes.some(
-                  (user) => user._id === userId));
-              })
-              .catch((err) => console.log(err));*/
-            /*request
-              .then((updatedCard) => {
-                if (!updatedCard || !Array.isArray(updatedCard.likes)) {
-                  console.error(
-                    "Respuesta inválida del servidor:",
-                    updatedCard
-                  );
-                  return;
-                }
-
-                const isLiked = updatedCard.likes.some(
-                  (user) => user._id === userId
-                );
-
-                cardInstance.toggleLike(isLiked);
-              })
-              .catch((err) => console.log(err));*/
-            request
-              .then((updatedCard) => {
-                cardInstance.toggleLike(updatedCard.isLiked);
-              })
-          .catch(console.log);
-        },
-        /*(cardInstance) => {
-              api
-                .deleteCard(cardInstance.getId())
-                .then(() => {
-                  cardInstance.removeCard();
-                })
-              .catch((err) => console.log(err));
-          },*/
-        (cardInstance) => {
-           confirmPopup.open();
-
-            confirmPopup.setSubmitAction(() => {
-              api
-                .deleteCard(cardInstance.getId())
-                .then(() => {
-                  cardInstance.removeCard();
-                  confirmPopup.close();
-                })
-                .catch(console.log);
-            });
-          },
-          userId
+  /*request
+    .then((updatedCard) => {
+      cardInstance.toggleLike(updatedCard.likes.some(
+        (user) => user._id === userId));
+    })
+    .catch((err) => console.log(err));*/
+  /*request
+    .then((updatedCard) => {
+      if (!updatedCard || !Array.isArray(updatedCard.likes)) {
+        console.error(
+          "Respuesta inválida del servidor:",
+          updatedCard
         );
-        cardSection.addItem(card.generateCard());
-      },
-    },
-    ".cards__list"
-  );
+        return;
+      }
+
+      const isLiked = updatedCard.likes.some(
+        (user) => user._id === userId
+      );
+
+      cardInstance.toggleLike(isLiked);
+    })
+    .catch((err) => console.log(err));*/
+  /*request
+    .then((updatedCard) => {
+      cardInstance.toggleLike(updatedCard.isLiked);
+    })
+.catch(console.log);
+},*/
+  /*(cardInstance) => {
+        api
+          .deleteCard(cardInstance.getId())
+          .then(() => {
+            cardInstance.removeCard();
+          })
+        .catch((err) => console.log(err));
+    },*/
+  /* (cardInstance) => {
+      confirmPopup.open();
+
+       confirmPopup.setSubmitAction(() => {
+         api
+           .deleteCard(cardInstance.getId())
+           .then(() => {
+             cardInstance.removeCard();
+             confirmPopup.close();
+           })
+           .catch(console.log);
+       });
+     },
+     userId
+   );
+   cardSection.addItem(card.generateCard());
+ },
+},
+".cards__list"
+);*/
 
   //llamada a la API
   /*api
@@ -198,6 +198,9 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((err) => console.log(err));
 */
+  
+  let cardSection;
+  
   Promise.all([api.getUserInfo(), api.getInitialCards()])
     .then(([userData, cards]) => {
       userId = userData._id;
@@ -208,9 +211,64 @@ document.addEventListener("DOMContentLoaded", () => {
         avatar: userData.avatar,
       });
 
+      cardSection = new Section(
+        {
+          items: cards,
+          renderer: (item) => {
+            const card = new Card(
+              item,
+              "#card-template",
+              (data) => imagePopup.open(data),
+
+              // ❤️ Like
+              (cardInstance) => {
+                const isLiked = cardInstance.isLiked();
+                const request = isLiked
+                  ? api.removeLike(cardInstance.getId())
+                  : api.addLike(cardInstance.getId());
+
+                request
+                  .then((updatedCard) => {
+                    cardInstance.toggleLike(updatedCard.isLiked);
+                  })
+                  .catch(console.log);
+              },
+
+              // 🗑️ Delete con confirmación
+              (cardInstance) => {
+                confirmPopup.open();
+
+                confirmPopup.setSubmitAction(() => {
+                  api
+                    .deleteCard(cardInstance.getId())
+                    .then(() => {
+                      cardInstance.removeCard();
+                      confirmPopup.close();
+                    })
+                    .catch(console.log);
+                });
+              },
+
+              userId
+            );
+
+            cardSection.addItem(card.generateCard());
+          },
+        },
+        ".cards__list"
+      );
+      
       cardSection.renderItems(cards);
     })
     .catch(console.log);
+
+  /*cardSection.renderItems(cards);
+})
+.catch(console.log);
+
+    cardSection.renderItems(cards);
+  })
+  .catch(console.log);*/
 
   // --- Controladores de Eventos del Proyecto ---
 
@@ -273,8 +331,12 @@ document.addEventListener("DOMContentLoaded", () => {
         link: data.link,
       })
       .then((cardData) => {
-        const card = new Card(cardData, "#card-template", (cardInfo) =>
-          imagePopup.open(cardInfo),(cardInstance) => {
+        const card = new Card(
+          cardData,
+          "#card-template",
+          (cardInfo) => imagePopup.open(cardInfo),
+          
+          (cardInstance) => {
             const isLiked = cardInstance.isLiked();
             const request = isLiked
               ? api.removeLike(cardInstance.getId())
@@ -286,14 +348,26 @@ document.addEventListener("DOMContentLoaded", () => {
               })
               .catch(console.log);
           },
-            (cardInstance) => {
+
+          (cardInstance) => {
+            /*api
+              .deleteCard(cardInstance.getId())
+              .then(() => {
+                cardInstance.removeCard();
+              })
+              .catch(console.log);
+          },*/
+            confirmPopup.open();
+            confirmPopup.setSubmitAction(() => {
               api
                 .deleteCard(cardInstance.getId())
                 .then(() => {
                   cardInstance.removeCard();
+                  confirmPopup.close();
                 })
                 .catch(console.log);
-            },
+            });
+          },
           userId
         );
 
