@@ -67,4 +67,11 @@
 
 .card__like-button_is-active {
   background: transparent url("../images/like-active.svg") no-repeat;
+  filter:
+   invert(22%)
+   sepia(95%)
+   saturate(7483%)
+   hue-rotate(356deg)
+   brightness(95%)
+   contrast(110%);
 }
