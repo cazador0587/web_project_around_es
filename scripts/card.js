@@ -1,11 +1,14 @@
 // Card.js
 
 export default class Card {
-  constructor(data, cardSelector, handleCardClick, handleLikeClick) {
+  constructor(data, cardSelector, handleCardClick, handleLikeClick, userId) {
     this._name = data.name;
     this._link = data.link;
-    this.id = data._id;
-    this._isLiked = data.isLiked || false;
+    this._id = data._id;
+    this._likes = data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
+    this._userId = userId;
+    this._isLiked = this._likes.some(user => user._id === this._userId);
+
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
@@ -48,9 +51,10 @@ export default class Card {
     this._image.alt = this._name;
     this._title.textContent = this._name;
 
+    this._isLiked = this._likes.some((user) => user._id === this._userId);
+
     this._setEventListeners();
     this.toggleLike(this._isLiked);
-
 
     return this._element;
   }

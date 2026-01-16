@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //instancia de la API
   const api = new Api(apiConfig);
-
+  let userId;
   // --- Funciones de Lógica de la Tarjeta ---
 
   // Función que crea e inserta una tarjeta
@@ -103,8 +103,47 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       items: [],
       renderer: (item) => {
-        const card = new Card(item, "#card-template", (data) =>
-          imagePopup.open(data)
+        const card = new Card(
+          item,
+          "#card-template",
+          (data) => imagePopup.open(data),
+          (cardInstance) => {
+            const isLiked = cardInstance.isLiked();
+
+            const request = isLiked
+              ? api.removeLike(cardInstance.getId())
+              : api.addLike(cardInstance.getId());
+
+            /*request
+              .then((updatedCard) => {
+                cardInstance.toggleLike(updatedCard.likes.some(
+                  (user) => user._id === userId));
+              })
+              .catch((err) => console.log(err));*/
+            /*request
+              .then((updatedCard) => {
+                if (!updatedCard || !Array.isArray(updatedCard.likes)) {
+                  console.error(
+                    "Respuesta inválida del servidor:",
+                    updatedCard
+                  );
+                  return;
+                }
+
+                const isLiked = updatedCard.likes.some(
+                  (user) => user._id === userId
+                );
+
+                cardInstance.toggleLike(isLiked);
+              })
+              .catch((err) => console.log(err));*/
+            request
+              .then((updatedCard) => {
+                cardInstance.toggleLike(updatedCard.isLiked);
+              })
+              .catch((err) => console.log(err));
+          },
+          userId
         );
         cardSection.addItem(card.generateCard());
       },
@@ -116,6 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
   api
     .getUserInfo()
     .then((data) => {
+      userId = data._id;
+
       userInfo.setUserInfo({
         name: data.name,
         job: data.about,
@@ -193,7 +234,24 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((cardData) => {
         const card = new Card(cardData, "#card-template", (cardInfo) =>
-          imagePopup.open(cardInfo)
+          imagePopup.open(cardInfo),(cardInstance) => {
+          const isLiked = cardInstance.isLiked();
+          const request = isLiked
+            ? api.removeLike(cardInstance.getId())
+            : api.addLike(cardInstance.getId());
+          request
+            .then((updatedCard) => {
+              const likes = Array.isArray(updatedCard.likes)
+                ? updatedCard.likes
+                : [];
+              
+              cardInstance.toggleLike(
+                likes.some(user => user._id === userId)
+              );
+            })
+            .catch((err) => console.log(err));
+        },
+          userId
         );
 
         cardSection.addItem(card.generateCard());
