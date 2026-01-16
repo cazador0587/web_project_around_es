@@ -1,17 +1,26 @@
 // Card.js
 
 export default class Card {
-  constructor(data, cardSelector, handleCardClick, handleLikeClick, userId) {
+  constructor(
+    data,
+    cardSelector,
+    handleCardClick,
+    handleLikeClick,
+    handleDeleteClick,
+    userId
+  ) {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
     this._likes = data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
     this._userId = userId;
-    this._isLiked = this._likes.some(user => user._id === this._userId);
+    this._isLiked = this._likes.some((user) => user._id === this._userId);
+    this._ownerId = data.owner._id;
 
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
+    this._handleDeleteClick = handleDeleteClick;
   }
 
   _getTemplate() {
@@ -27,8 +36,12 @@ export default class Card {
       this._handleLikeClick(this);
     });
 
-    this._deleteButton.addEventListener("click", () => {
+    /*this._deleteButton.addEventListener("click", () => {
       this._element.remove();
+    });*/
+    
+    this._deleteButton.addEventListener("click", () => {
+      this._handleDeleteClick(this);
     });
 
     this._image.addEventListener("click", () => {
@@ -75,5 +88,14 @@ export default class Card {
 
   isLiked() {
     return this._isLiked;
+  }
+
+  removeCard() {
+    this._element.remove();
+    this._element = null;
+
+    if (this._ownerId !== this._userId) {
+      this._deleteButton.remove();
+    }
   }
 }

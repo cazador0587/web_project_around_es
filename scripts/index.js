@@ -139,8 +139,17 @@ document.addEventListener("DOMContentLoaded", () => {
               .catch((err) => console.log(err));*/
             request
               .then((updatedCard) => {
-                cardInstance.toggleLike(updatedCard.isLiked);
-              })
+                cardInstance.toggleLike(updatedCard.likes.some((user) => user._id === userId));
+          })
+          .catch(console.log);
+        },
+              (cardInstance) => {
+
+              api
+                .deleteCard(cardInstance.getId())
+                .then(() => {
+                  cardInstance.removeCard();
+                })
               .catch((err) => console.log(err));
           },
           userId
@@ -235,22 +244,27 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((cardData) => {
         const card = new Card(cardData, "#card-template", (cardInfo) =>
           imagePopup.open(cardInfo),(cardInstance) => {
-          const isLiked = cardInstance.isLiked();
-          const request = isLiked
-            ? api.removeLike(cardInstance.getId())
-            : api.addLike(cardInstance.getId());
-          request
-            .then((updatedCard) => {
-              const likes = Array.isArray(updatedCard.likes)
-                ? updatedCard.likes
-                : [];
-              
-              cardInstance.toggleLike(
-                likes.some(user => user._id === userId)
-              );
-            })
-            .catch((err) => console.log(err));
-        },
+            const isLiked = cardInstance.isLiked();
+            const request = isLiked
+              ? api.removeLike(cardInstance.getId())
+              : api.addLike(cardInstance.getId());
+
+            request
+              .then((updatedCard) => {
+                cardInstance.toggleLike(
+                  updatedCard.likes.some((user) => user._id === userId)
+                );
+              })
+              .catch(console.log);
+          },
+            (cardInstance) => {
+              api
+                .deleteCard(cardInstance.getId())
+                .then(() => {
+                  cardInstance.removeCard();
+                })
+                .catch(console.log);
+            },
           userId
         );
 
