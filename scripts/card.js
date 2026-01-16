@@ -15,7 +15,9 @@ export default class Card {
     this._likes = data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
     this._userId = userId;
     this._isLiked = this._likes.some((user) => user._id === this._userId);
-    this._ownerId = data.owner._id;
+    //this._ownerId = data.owner._id;
+    this._ownerId =
+      typeof data.owner === "object" ? data.owner._id : data.owner;
 
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
@@ -64,11 +66,11 @@ export default class Card {
     this._image.alt = this._name;
     this._title.textContent = this._name;
 
+     this._isLiked = this._likes.some((user) => user._id === this._userId);
+
     if (this._ownerId !== this._userId) {
       this._deleteButton.remove();
     }
-
-    this._isLiked = this._likes.some((user) => user._id === this._userId);
 
     this._setEventListeners();
     this.toggleLike(this._isLiked);
