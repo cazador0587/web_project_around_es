@@ -44,6 +44,24 @@ document.addEventListener("DOMContentLoaded", () => {
       (data) => imagePopup.open(data),
       (cardInstance) => {
         /* Lógica Like... igual que antes */
+        cardInstance.disableLike();
+        const isLiked = cardInstance.isLiked();
+        const request = isLiked
+          ? api.removeLike(cardInstance.getId())
+          : api.addLike(cardInstance.getId());
+
+        request
+          .then((updatedCard) => {
+            // Asegúrate que tu API devuelva los datos correctos
+            if (updatedCard && updatedCard.likes) {
+              const currentlyLiked = updatedCard.likes.some(
+                (u) => u._id === userId
+              );
+              cardInstance.toggleLike(currentlyLiked);
+            }
+          })
+          .catch((err) => console.log("Error al procesar el like:", err))
+          .finally(() => cardInstance.enableLike());
       },
       (cardInstance) => {
         confirmPopup.open();
@@ -79,6 +97,34 @@ document.addEventListener("DOMContentLoaded", () => {
   avatarPopup.setEventListeners();
 
   // Editar Perfil e hilos de tarjetas... (mantener igual que el anterior)
+  // Popup Editar Perfil
+  const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+    editProfilePopup.renderLoading(true);
+    api
+      .updateUserInfo({ name: data.name, about: data.description })
+      .then((userData) => {
+        userInfo.setUserInfo({ name: userData.name, job: userData.about });
+        editProfilePopup.close();
+      })
+      .catch(console.log)
+      .finally(() => editProfilePopup.renderLoading(false));
+  });
+  editProfilePopup.setEventListeners();
+
+  // Popup Nueva Tarjeta
+  const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+    addCardPopup.renderLoading(true);
+    api
+      .addCard({ name: data.name, link: data.link })
+      .then((newCardData) => {
+        const cardElement = createCard(newCardData);
+        cardSection.addItem(cardElement);
+        addCardPopup.close();
+      })
+      .catch(console.log)
+      .finally(() => addCardPopup.renderLoading(false));
+  });
+  addCardPopup.setEventListeners();
 
   // --- 5. VALIDACIÓN ---
   // Usamos document.querySelector directamente para evitar errores de variables no definidas
@@ -94,14 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
     validationConfig,
     document.querySelector("#avatar-form")
   );
-  avatarValidator.setEventListeners();
 
-  document
+  /*document
     .querySelector(".profile__avatar-edit-button")
     .addEventListener("click", () => {
       avatarValidator.resetValidation();
       avatarPopup.open();
-    });
+    });*/
 
   profileValidator.setEventListeners();
   newCardValidator.setEventListeners();
