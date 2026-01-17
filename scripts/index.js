@@ -9,7 +9,7 @@ import FormValidator from "./formValidator.js";
 import PopupWithConfirmation from "./PopupWithConfirmation.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- 1. CONFIGURACIÓN Y VARIABLES ---
+  // --- 1. CONFIGURACIÓN ---
   const validationConfig = {
     formSelector: ".popup__form",
     inputSelector: ".popup__input",
@@ -23,47 +23,31 @@ document.addEventListener("DOMContentLoaded", () => {
   let userId;
   let cardSection;
 
-  // Modales
-  const modalEditProfile = document.querySelector("#edit-popup");
-  const modalAddCard = document.querySelector("#new-card-popup");
-  //const modalImageView = document.querySelector('#image-popup');
+  // --- 2. INSTANCIAS DE COMPONENTES ---
+  const userInfo = new UserInfo({
+    nameSelector: ".profile__title",
+    jobSelector: ".profile__description",
+    avatarSelector: ".profile__image",
+  });
 
-  // Formularios
-  const formEditProfile = modalEditProfile.querySelector(".popup__form");
-  const formAddCard = modalAddCard.querySelector(".popup__form");
+  const imagePopup = new PopupWithImage("#image-popup");
+  imagePopup.setEventListeners();
 
-  // Botones
-  const buttonEditProfile = document.querySelector(".profile__edit-button");
-  const buttonAddCard = document.querySelector(".profile__add-button");
+  const confirmPopup = new PopupWithConfirmation("#confirm-popup");
+  confirmPopup.setEventListeners();
 
-  // Campos del formulario de perfil
-  const nameInput = document.querySelector(".popup__input_type_name");
-  const jobInput = document.querySelector(".popup__input_type_description");
-  //const profileName = document.querySelector(".profile__title");
-  //const profileJob = document.querySelector('.profile__description');
-
-  // Elementos de la modal de imagen
-  /*const imageViewImage = modalImageView.querySelector('.popup__image');
-  const imageViewCaption = modalImageView.querySelector(".popup__caption");*/
-
-  //instancia de la API
-
-  // --- Funciones de Lógica de la Tarjeta ---
-
-  // Función que crea e inserta una tarjeta
-  /*function createCard(data) {
-    const card = new Card(data, templateSelector, handleImageClick);
-    return card.generateCard();
-  }*/
-
+  // ============================================================
+  // --- 3. PUNTO C: FUNCIÓN AYUDANTE (Única lógica de tarjetas) ---
+  // ============================================================
   function createCard(item) {
     const card = new Card(
       item,
       "#card-template",
-      (data) => imagePopup.open(data), // Manejador de click en imagen
+      (data) => imagePopup.open(data), // Click en imagen
 
-      // Manejador de LIKE ❤️
+      // Manejador de Like ❤️
       (cardInstance) => {
+        cardInstance.disableLike();
         const isLiked = cardInstance.isLiked();
         const request = isLiked
           ? api.removeLike(cardInstance.getId())
@@ -71,13 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         request
           .then((updatedCard) => {
-            // Asegúrate de que card.js use la clase CSS correcta
             cardInstance.toggleLike(updatedCard.isLiked);
           })
-          .catch(console.log);
+          .catch(console.log)
+          .finally(() => cardInstance.enableLike());
       },
 
-      // Manejador de ELIMINAR 🗑️
+      // Manejador de Borrar 🗑️
       (cardInstance) => {
         confirmPopup.open();
         confirmPopup.setSubmitAction(() => {
@@ -90,399 +74,98 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(console.log);
         });
       },
-      userId // Pasamos el ID del usuario actual
+      userId
     );
     return card.generateCard();
   }
 
-  // ==========================================
-  // SIGUIENTE PASO: INSTANCIAR LA SECCIÓN
-  // ==========================================
-
-  const cardSection = new Section(
+  // --- 4. INICIALIZACIÓN DE LA SECCIÓN ---
+  cardSection = new Section(
     {
-      items: [], // Empezamos vacío
+      items: [],
       renderer: (item) => {
-        const cardElement = createCard(item); // Usamos la función de arriba
+        const cardElement = createCard(item);
         cardSection.addItem(cardElement);
       },
     },
     ".cards__list"
   );
 
-  // ==========================================
-  // CARGA INICIAL (Promise.all)
-  // ==========================================
-
+  // --- 5. CARGA DE DATOS (API) ---
   Promise.all([api.getUserInfo(), api.getInitialCards()])
     .then(([userData, cards]) => {
-      userId = userData._id; // Guardamos el ID del servidor
-
-      // Seteamos info del usuario
-      userInfo.setUserInfo({
-        name: userData.name,
-        job: userData.about,
-        avatar: userData.avatar,
-      });
-
-      // Renderizamos las tarjetas del servidor
-      cardSection.renderItems(cards);
-    })
-    .catch(console.log);
-
-  // ... (Aquí siguen los PopupWithForm para editar perfil y añadir tarjeta) ...
-});
-
-const confirmPopup = new PopupWithConfirmation("#confirm-popup");
-confirmPopup.setEventListeners();
-
-//Creación de instancias
-const userInfo = new UserInfo({
-  nameSelector: ".profile__title",
-  jobSelector: ".profile__description",
-  avatarSelector: ".profile__image",
-});
-
-const imagePopup = new PopupWithImage("#image-popup");
-imagePopup.setEventListeners();
-
-/*const cardSection = new Section(
-    {
-      items: [],
-      renderer: (item) => {
-        const card = new Card(
-          item,
-          "#card-template",
-          (data) => imagePopup.open(data),
-          (cardInstance) => {
-            const isLiked = cardInstance.isLiked();
-
-            const request = isLiked
-              ? api.removeLike(cardInstance.getId())
-              : api.addLike(cardInstance.getId());*/
-
-/*request
-    .then((updatedCard) => {
-      cardInstance.toggleLike(updatedCard.likes.some(
-        (user) => user._id === userId));
-    })
-    .catch((err) => console.log(err));*/
-/*request
-    .then((updatedCard) => {
-      if (!updatedCard || !Array.isArray(updatedCard.likes)) {
-        console.error(
-          "Respuesta inválida del servidor:",
-          updatedCard
-        );
-        return;
-      }
-
-      const isLiked = updatedCard.likes.some(
-        (user) => user._id === userId
-      );
-
-      cardInstance.toggleLike(isLiked);
-    })
-    .catch((err) => console.log(err));*/
-/*request
-    .then((updatedCard) => {
-      cardInstance.toggleLike(updatedCard.isLiked);
-    })
-.catch(console.log);
-},*/
-/*(cardInstance) => {
-        api
-          .deleteCard(cardInstance.getId())
-          .then(() => {
-            cardInstance.removeCard();
-          })
-        .catch((err) => console.log(err));
-    },*/
-/* (cardInstance) => {
-      confirmPopup.open();
-
-       confirmPopup.setSubmitAction(() => {
-         api
-           .deleteCard(cardInstance.getId())
-           .then(() => {
-             cardInstance.removeCard();
-             confirmPopup.close();
-           })
-           .catch(console.log);
-       });
-     },
-     userId
-   );
-   cardSection.addItem(card.generateCard());
- },
-},
-".cards__list"
-);*/
-
-//llamada a la API
-/*api
-    .getUserInfo()
-    .then((data) => {
-      userId = data._id;
-
-      userInfo.setUserInfo({
-        name: data.name,
-        job: data.about,
-        avatar: data.avatar,
-      });
-    })
-    .catch((err) => console.log(err));
-
-  api
-    .getInitialCards()
-    .then((cards) => {
-      cardSection.renderItems(cards);
-    })
-    .catch((err) => console.log(err));
-*/
-
-let cardSection;
-
-/*Promise.all([api.getUserInfo(), api.getInitialCards()])
-    .then(([userData, cards]) => {
       userId = userData._id;
-
       userInfo.setUserInfo({
         name: userData.name,
         job: userData.about,
         avatar: userData.avatar,
       });
-
-      cardSection = new Section(
-        {
-          items: cards,
-          renderer: (item) => {
-            const card = new Card(
-              item,
-              "#card-template",
-              (data) => imagePopup.open(data),
-
-              // ❤️ Like
-              (cardInstance) => {
-                const isLiked = cardInstance.isLiked();
-                const request = isLiked
-                  ? api.removeLike(cardInstance.getId())
-                  : api.addLike(cardInstance.getId());
-
-                request
-                  .then((updatedCard) => {
-                    cardInstance.toggleLike(updatedCard.isLiked);
-                  })
-                  .catch(console.log);
-              },
-
-              // 🗑️ Delete con confirmación
-              (cardInstance) => {
-                confirmPopup.open();
-
-                confirmPopup.setSubmitAction(() => {
-                  api
-                    .deleteCard(cardInstance.getId())
-                    .then(() => {
-                      cardInstance.removeCard();
-                      confirmPopup.close();
-                    })
-                    .catch(console.log);
-                });
-              },
-              userId
-            );
-            return card.generateCard();
-          },
-        },
-        ".cards__list"
-      );
-      
       cardSection.renderItems(cards);
     })
     .catch(console.log);
 
-  /*cardSection.renderItems(cards);
-})
-.catch(console.log);
+  // --- 6. FORMULARIOS (Popups) ---
 
-    cardSection.renderItems(cards);
-  })
-  .catch(console.log);*/
-
-// --- Controladores de Eventos del Proyecto ---
-
-// 1. Manejo de la Modal de Edición de Perfil
-/*const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
-    userInfo.setUserInfo({
-      name: data.name,
-      job: data.description,
-    });
-  });*/
-
-const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
-  editProfilePopup.renderLoading(true);
-
-  api
-    .updateUserInfo({
-      name: data.name,
-      about: data.description,
-    })
-    .then((userData) => {
-      userInfo.setUserInfo({
-        name: userData.name,
-        job: userData.about,
-      });
-      editProfilePopup.close();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      editProfilePopup.renderLoading(false);
-    });
-});
-
-editProfilePopup.setEventListeners();
-
-/*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+  // Editar Perfil
+  const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+    editProfilePopup.renderLoading(true);
     api
-      .addCard(data)
-      .then((cardData) => {
-        const card = new Card(cardData, "#card-template", (item) =>
-          imagePopup.open(item)
-        );
+      .updateUserInfo({ name: data.name, about: data.description })
+      .then((userData) => {
+        userInfo.setUserInfo({ name: userData.name, job: userData.about });
+        editProfilePopup.close();
+      })
+      .catch(console.log)
+      .finally(() => editProfilePopup.renderLoading(false));
+  });
+  editProfilePopup.setEventListeners();
 
-        cardSection.addItem(card.generateCard());
+  // Nueva Tarjeta
+  const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+    addCardPopup.renderLoading(true);
+    api
+      .addCard({ name: data.name, link: data.link })
+      .then((newCardData) => {
+        const cardElement = createCard(newCardData); // <--- USO DE PUNTO C
+        cardSection.addItem(cardElement);
         addCardPopup.close();
       })
-      .catch((err) => console.log(err));
+      .catch(console.log)
+      .finally(() => addCardPopup.renderLoading(false));
   });
   addCardPopup.setEventListeners();
-*/
 
-const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
-  addCardPopup.renderLoading(true);
+  // --- 7. VALIDACIÓN Y EVENTOS DE BOTONES ---
+  const profileValidator = new FormValidator(
+    validationConfig,
+    document.querySelector("#edit-popup .popup__form")
+  );
+  profileValidator.setEventListeners();
 
-  api
-    .addCard({
-      name: data["name"],
-      link: data.link,
-    })
-    .then((cardData) => {
-      const card = new Card(
-        cardData,
-        "#card-template",
-        (cardInfo) => imagePopup.open(cardInfo),
+  const newCardValidator = new FormValidator(
+    validationConfig,
+    document.querySelector("#new-card-popup .popup__form")
+  );
+  newCardValidator.setEventListeners();
 
-        (cardInstance) => {
-          const isLiked = cardInstance.isLiked();
-          const request = isLiked
-            ? api.removeLike(cardInstance.getId())
-            : api.addLike(cardInstance.getId());
+  // Abrir modal de añadir
+  document
+    .querySelector(".profile__add-button")
+    .addEventListener("click", () => {
+      newCardValidator.resetValidation();
+      addCardPopup.open();
+    });
 
-          request
-            .then((updatedCard) => {
-              cardInstance.toggleLike(updatedCard.isLiked);
-            })
-            .catch(console.log);
-        },
-
-        (cardInstance) => {
-          /*api
-              .deleteCard(cardInstance.getId())
-              .then(() => {
-                cardInstance.removeCard();
-              })
-              .catch(console.log);
-          },*/
-          confirmPopup.open();
-          confirmPopup.setSubmitAction(() => {
-            confirmPopup.close();
-            api
-              .deleteCard(cardInstance.getId())
-              .then(() => {
-                cardInstance.removeCard();
-              })
-              .catch(console.log)
-              .finally(() => {
-                confirmPopup.renderLoading(false);
-              });
-          });
-        },
-        (cardInstance) => {
-          cardInstance.disableLike();
-          const request = cardInstance.isLiked()
-            ? api.removeLike(cardInstance.getId())
-            : api.addLike(cardInstance.getId());
-
-          request
-            .then((updatedCard) => {
-              cardInstance.toggleLike(updatedCard.isLiked);
-            })
-            .catch(console.log)
-            .finally(() => {
-              cardInstance.enableLike();
-            })
-            .catch(() => {
-              alert("Error al conectar con el servidor. Intenta de nuevo.");
-            });
-        },
-        userId
-      );
-
-      cardSection.addItem(card.generateCard());
-      addCardPopup.close();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      addCardPopup.renderLoading(false);
+  // Abrir modal de editar
+  document
+    .querySelector(".profile__edit-button")
+    .addEventListener("click", () => {
+      const currentUserData = userInfo.getUserInfo();
+      document.querySelector(".popup__input_type_name").value =
+        currentUserData.name;
+      document.querySelector(".popup__input_type_description").value =
+        currentUserData.job;
+      profileValidator.resetValidation();
+      editProfilePopup.open();
     });
 });
-
-addCardPopup.setEventListeners();
-
-/*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
-    const card = new Card(data, "#card-template", (cardData) =>
-      imagePopup.open(cardData)
-    );
-
-    cardSection.addItem(card.generateCard());
-  });
-
-  addCardPopup.setEventListeners();
-  */
-
-/*imagePopup.open({
-   name: "Prueba",
-   link: "https://placehold.co/600x400",
- });*/
-
-// --- Inicialización de la Lógica de Validación ---
-
-// Instancia de FormValidator para el formulario de Perfil
-const profileValidator = new FormValidator(validationConfig, formEditProfile);
-profileValidator.setEventListeners();
-
-// Instancia de FormValidator para el formulario de Nueva Tarjeta
-const newCardValidator = new FormValidator(validationConfig, formAddCard);
-newCardValidator.setEventListeners();
-
-// 2. Manejo de la Modal de Añadir Tarjeta
-buttonAddCard.addEventListener("click", () => {
-  newCardValidator.resetValidation();
-  addCardPopup.open();
-});
-
-buttonEditProfile.addEventListener("click", () => {
-  const currentUserData = userInfo.getUserInfo();
-  nameInput.value = currentUserData.name;
-  jobInput.value = currentUserData.job;
-
-  profileValidator.resetValidation();
-  editProfilePopup.open();
-});
-
-//cardSection.renderItems();
