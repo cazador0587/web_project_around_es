@@ -1,7 +1,8 @@
 // FormValidator.js
 
+// FormValidator.js
+
 export default class FormValidator {
-  // 1. Constructor: recibe la configuración de selectores y el elemento del formulario
   constructor(config, formElement) {
     this._config = config;
     this._formElement = formElement;
@@ -13,8 +14,8 @@ export default class FormValidator {
     );
   }
 
-  // 2. Método privado para mostrar el mensaje de error
   _showInputError(inputElement, errorMessage) {
+    // Busca el span de error usando el atributo 'name' del input
     const errorElement = this._formElement.querySelector(
       `.${inputElement.name}-error`
     );
@@ -22,16 +23,15 @@ export default class FormValidator {
     if (!errorElement) return;
 
     errorElement.textContent = errorMessage || inputElement.validationMessage;
-    //errorElement.textContent = errorMessage;
     errorElement.classList.add(this._config.errorClass);
     inputElement.classList.add(this._config.inputErrorClass);
   }
 
-  // 3. Método privado para ocultar el mensaje de error
   _hideInputError(inputElement) {
     const errorElement = this._formElement.querySelector(
       `.${inputElement.name}-error`
     );
+    
     if (errorElement) {
       inputElement.classList.remove(this._config.inputErrorClass);
       errorElement.classList.remove(this._config.errorClass);
@@ -39,7 +39,6 @@ export default class FormValidator {
     }
   }
 
-  // 4. Método privado para verificar la validez del campo (Check Validity)
   _checkInputValidity(inputElement) {
     if (!inputElement.validity.valid) {
       this._showInputError(inputElement);
@@ -48,15 +47,12 @@ export default class FormValidator {
     }
   }
 
-  // 5. Método privado para comprobar si hay campos no válidos
   _hasInvalidInput() {
-    // El método `some()` devolverá `true` si al menos un elemento no es válido
     return this._inputList.some((inputElement) => {
       return !inputElement.validity.valid;
     });
   }
 
-  // 6. Método privado para cambiar el estado del botón Submit (Toggle Button State)
   _toggleButtonState() {
     if (this._hasInvalidInput()) {
       this._buttonElement.classList.add(this._config.inactiveButtonClass);
@@ -67,27 +63,23 @@ export default class FormValidator {
     }
   }
 
-  // 7. Método público para activar la validación del formulario (Set Event Listeners)
   setEventListeners() {
-    // Inicia el estado del botón al cargar (útil si hay campos ya llenos)
     this._toggleButtonState();
 
-    // Agrega el controlador de eventos `input` a cada campo
     this._inputList.forEach((inputElement) => {
       inputElement.addEventListener("input", () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(); // Cambia el estado del botón con cada entrada
+        this._toggleButtonState();
       });
     });
   }
 
-  // Método para restablecer la validación al abrir/cerrar la modal
+  // 💡 Método esencial: limpia errores y desactiva el botón al abrir el popup
   resetValidation() {
-    this._inputList.forEach((inputElement) => {
-      this._hideInputError(inputElement);
-    });
+    this._toggleButtonState(); // Re-evalúa el botón (lo desactiva si el form está vacío)
 
-    // Deshabilita el botón (necesario si la modal se cierra con el botón Submit activo)
-    this._toggleButtonState();
+    this._inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement); // Borra mensajes rojos y bordes rojos
+    });
   }
 }
