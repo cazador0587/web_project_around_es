@@ -14,7 +14,10 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__avatar-container">
+            <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+            <button aria-label="Cambiar avatar" class="profile__avatar-edit-button" type="button"></button>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button aria-label="Editar perfil" class="profile__edit-button" type="button"></button>
@@ -22,6 +25,7 @@
           </div>
           <button aria-label="Agregar tarjeta" class="profile__add-button" type="button"></button>
         </section>
+        
         <section class="cards page__section">
           <ul class="cards__list">
             <!-- Las tarjetas se insertan aquí -->
@@ -42,6 +46,24 @@
       <footer class="footer page__section">
         <p class="footer__copyright">© 2025 Around The U.S.</p>
       </footer>
+      <div class="popup" id="avatar-popup">
+        <div class="popup__content">
+          <button aria-label="Cerrar ventana emergente" class="popup__close" type="button"></button>
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+          <form class="popup__form" id="avatar-form" name="avatar-form" novalidate>
+            <input
+              class="popup__input"
+              id="avatar-url"
+              name="avatar"
+              placeholder="Enlace a la nueva imagen de perfil"
+              required
+              type="url"
+            />
+            <span class="popup__error avatar-error"></span>
+            <button class="button popup__button" type="submit">Guardar</button>
+          </form>
+        </div>
+      </div>
       <div class="popup" id="edit-popup">
         <div class="popup__content">
           <button

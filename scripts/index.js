@@ -1,3 +1,13 @@
+import Api from "./Api.js";
+import { apiConfig } from "./constants.js";
+import Card from "./card.js";
+import Section from "./Section.js";
+import PopupWithImage from "./PopupWithImage.js";
+import PopupWithForm from "./PopupWithForm.js";
+import UserInfo from "./UserInfo.js";
+import FormValidator from "./formValidator.js";
+import PopupWithConfirmation from "./PopupWithConfirmation.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- 1. CONFIGURACIÓN ---
   const validationConfig = {
@@ -84,6 +94,14 @@ document.addEventListener("DOMContentLoaded", () => {
     validationConfig,
     document.querySelector("#avatar-form")
   );
+  avatarValidator.setEventListeners();
+
+  document
+    .querySelector(".profile__avatar-edit-button")
+    .addEventListener("click", () => {
+      avatarValidator.resetValidation();
+      avatarPopup.open();
+    });
 
   profileValidator.setEventListeners();
   newCardValidator.setEventListeners();
