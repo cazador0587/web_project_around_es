@@ -12,11 +12,10 @@ export default class Card {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
-    this._likes =
-      data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
+    this._likes = data.likes || [];
     this._userId = userId;
-    this._isLiked = this._likes.some((user) => user._id === this._userId);
-    //this._ownerId = data.owner._id;
+
+    // Determinamos si el dueño de la tarjeta es el usuario actual
     this._ownerId =
       typeof data.owner === "object" ? data.owner._id : data.owner;
 
@@ -33,50 +32,30 @@ export default class Card {
       .cloneNode(true);
   }
 
-  /*_setEventListeners() {
-    this._likeButton.addEventListener("click", () => {
-      this._likeButton.classList.toggle("card__like-button_is-active");
-      this._handleLikeClick(this);
-    });
-
-    /*this._deleteButton.addEventListener("click", () => {
-      this._element.remove();
-    });*/
-
-  /*this._deleteButton.addEventListener("click", () => {
-      this._handleDeleteClick(this);
-    });
-
-    this._image.addEventListener("click", () => {
-      this._handleCardClick({
-        name: this._name,
-        link: this._link,
-      });
-    });
-  }*/
-
-  // card.js
   _setEventListeners() {
+    // Botón de Like
     this._likeButton.addEventListener("click", () => {
-      // 🚨 Eliminamos el toggle manual aquí para que no choque con index.js
       this._handleLikeClick(this);
     });
 
+    // Botón de Borrar
     this._deleteButton.addEventListener("click", () => {
       this._handleDeleteClick(this);
     });
 
+    // Click en la imagen para ampliar
     this._image.addEventListener("click", () => {
       this._handleCardClick({ name: this._name, link: this._link });
     });
   }
 
+  // Método para actualizar el estado visual del Like
   toggleLike(isLiked) {
     this._isLiked = isLiked;
     if (this._isLiked) {
-      this._likeButton.classList.add("card__like-button_is-active"); // ✅ Clase unificada
+      this._likeButton.classList.add("card__like-button_is-active");
     } else {
-      this._likeButton.classList.remove("card__like-button_is-active"); // ✅ Clase unificada
+      this._likeButton.classList.remove("card__like-button_is-active");
     }
   }
 
@@ -92,28 +71,21 @@ export default class Card {
     this._image.alt = this._name;
     this._title.textContent = this._name;
 
+    // Calculamos si el usuario actual ya le dio Like
     this._isLiked = this._likes.some((user) => user._id === this._userId);
 
+    // 🗑️ Si no soy el dueño, elimino el botón de basura del DOM
     if (this._ownerId !== this._userId) {
       this._deleteButton.remove();
     }
 
     this._setEventListeners();
-    this.toggleLike(this._isLiked);
+    this.toggleLike(this._isLiked); // Aplicamos el estado inicial del Like
 
     return this._element;
   }
 
-  toggleLike(isLiked) {
-    this._isLiked = isLiked;
-
-    if (this._isLiked) {
-      this._likeButton.classList.add("card__like-button_is-active");
-    } else {
-      this._likeButton.classList.remove("card__like-button_is-active");
-    }
-  }
-
+  // Métodos de utilidad para index.js
   getId() {
     return this._id;
   }
@@ -123,19 +95,16 @@ export default class Card {
   }
 
   removeCard() {
-    if (!this._element) {
-      return;
-    }
-
     this._element.remove();
     this._element = null;
   }
 
+  // Métodos para prevenir múltiples clics mientras la API responde
   disableLike() {
-    this._likeButton.disabled = true;
+    this._likeButton.style.pointerEvents = "none";
   }
 
   enableLike() {
-    this._likeButton.disabled = false;
+    this._likeButton.style.pointerEvents = "auto";
   }
 }
