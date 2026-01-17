@@ -243,4 +243,8 @@
     max-width: 75vw;
     padding: 0;
   }
+
+  #confirm-popup .popup__button {
+    margin-top: 0;
+  }
 }

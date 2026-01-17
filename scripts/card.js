@@ -12,7 +12,8 @@ export default class Card {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
-    this._likes = data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
+    this._likes =
+      data.likes || []; /*Array.isArray(data.likes) ? data.likes : [];*/
     this._userId = userId;
     this._isLiked = this._likes.some((user) => user._id === this._userId);
     //this._ownerId = data.owner._id;
@@ -32,7 +33,7 @@ export default class Card {
       .cloneNode(true);
   }
 
-  _setEventListeners() {
+  /*_setEventListeners() {
     this._likeButton.addEventListener("click", () => {
       this._likeButton.classList.toggle("card__like-button_is-active");
       this._handleLikeClick(this);
@@ -42,7 +43,7 @@ export default class Card {
       this._element.remove();
     });*/
 
-    this._deleteButton.addEventListener("click", () => {
+  /*this._deleteButton.addEventListener("click", () => {
       this._handleDeleteClick(this);
     });
 
@@ -52,6 +53,31 @@ export default class Card {
         link: this._link,
       });
     });
+  }*/
+
+  // card.js
+  _setEventListeners() {
+    this._likeButton.addEventListener("click", () => {
+      // 🚨 Eliminamos el toggle manual aquí para que no choque con index.js
+      this._handleLikeClick(this);
+    });
+
+    this._deleteButton.addEventListener("click", () => {
+      this._handleDeleteClick(this);
+    });
+
+    this._image.addEventListener("click", () => {
+      this._handleCardClick({ name: this._name, link: this._link });
+    });
+  }
+
+  toggleLike(isLiked) {
+    this._isLiked = isLiked;
+    if (this._isLiked) {
+      this._likeButton.classList.add("card__like-button_is-active"); // ✅ Clase unificada
+    } else {
+      this._likeButton.classList.remove("card__like-button_is-active"); // ✅ Clase unificada
+    }
   }
 
   generateCard() {
@@ -66,7 +92,7 @@ export default class Card {
     this._image.alt = this._name;
     this._title.textContent = this._name;
 
-     this._isLiked = this._likes.some((user) => user._id === this._userId);
+    this._isLiked = this._likes.some((user) => user._id === this._userId);
 
     if (this._ownerId !== this._userId) {
       this._deleteButton.remove();
@@ -82,9 +108,9 @@ export default class Card {
     this._isLiked = isLiked;
 
     if (this._isLiked) {
-      this._likeButton.classList.add("card__like-button_active");
+      this._likeButton.classList.add("card__like-button_is-active");
     } else {
-      this._likeButton.classList.remove("card__like-button_active");
+      this._likeButton.classList.remove("card__like-button_is-active");
     }
   }
 
@@ -97,7 +123,19 @@ export default class Card {
   }
 
   removeCard() {
+    if (!this._element) {
+      return;
+    }
+
     this._element.remove();
     this._element = null;
+  }
+
+  disableLike() {
+    this._likeButton.disabled = true;
+  }
+
+  enableLike() {
+    this._likeButton.disabled = false;
   }
 }

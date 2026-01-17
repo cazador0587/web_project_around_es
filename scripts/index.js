@@ -1,5 +1,3 @@
-// index.js
-// Importa las clases y utilidades
 import Api from "./Api.js";
 import { apiConfig } from "./constants.js";
 import Card from "./card.js";
@@ -10,10 +8,8 @@ import UserInfo from "./UserInfo.js";
 import FormValidator from "./formValidator.js";
 import PopupWithConfirmation from "./PopupWithConfirmation.js";
 
-// index.js (Línea 7)
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Constantes y Configuración ---
-  // 1. Configuración de validación (debe coincidir con tus clases CSS)
+  // --- 1. CONFIGURACIÓN Y VARIABLES ---
   const validationConfig = {
     formSelector: ".popup__form",
     inputSelector: ".popup__input",
@@ -23,38 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     errorClass: "popup__error_visible",
   };
 
-  // 2. Datos iniciales de las tarjetas
-  /*const initialCards = [
-    // ... Tus 6 objetos de tarjetas aquí (e.g., { name: "Yosemite Valley", link: "..." })
-    {
-      name: "Valle de Yosemite",
-      link: "./images/valle-yosemite.jpg",
-    },
-    {
-      name: "Lago Louise",
-      link: "./images/lago-louise.jpg",
-    },
-    {
-      name: "Montañas Calvas",
-      link: "./images/montaña-calva.jpg",
-    },
-    {
-      name: "Latemar",
-      link: "./images/latemar.jpg",
-    },
-    {
-      name: "Parque Nacional de la Vanoise",
-      link: "./images/parque-vanoise.jpg",
-    },
-    {
-      name: "Lago Di Braies",
-      link: "./images/lago-braies.jpg",
-    },
-  ];*/
-
-  // --- Elementos del DOM ---
-  //const cardsContainer = document.querySelector('.cards__list');
-  //const templateSelector = '#card-template'; // Selector de la plantilla de la tarjeta
+  const api = new Api(apiConfig);
+  let userId;
+  let cardSection;
 
   // Modales
   const modalEditProfile = document.querySelector("#edit-popup");
@@ -80,8 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageViewCaption = modalImageView.querySelector(".popup__caption");*/
 
   //instancia de la API
-  const api = new Api(apiConfig);
-  let userId;
+
   // --- Funciones de Lógica de la Tarjeta ---
 
   // Función que crea e inserta una tarjeta
@@ -89,22 +55,98 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = new Card(data, templateSelector, handleImageClick);
     return card.generateCard();
   }*/
-  
-  const confirmPopup = new PopupWithConfirmation("#confirm-popup");
-  confirmPopup.setEventListeners();
 
+  function createCard(item) {
+    const card = new Card(
+      item,
+      "#card-template",
+      (data) => imagePopup.open(data), // Manejador de click en imagen
 
-  //Creación de instancias
-  const userInfo = new UserInfo({
-    nameSelector: ".profile__title",
-    jobSelector: ".profile__description",
-    avatarSelector: ".profile__image",
-  });
+      // Manejador de LIKE ❤️
+      (cardInstance) => {
+        const isLiked = cardInstance.isLiked();
+        const request = isLiked
+          ? api.removeLike(cardInstance.getId())
+          : api.addLike(cardInstance.getId());
 
-  const imagePopup = new PopupWithImage("#image-popup");
-  imagePopup.setEventListeners();
+        request
+          .then((updatedCard) => {
+            // Asegúrate de que card.js use la clase CSS correcta
+            cardInstance.toggleLike(updatedCard.isLiked);
+          })
+          .catch(console.log);
+      },
 
-  /*const cardSection = new Section(
+      // Manejador de ELIMINAR 🗑️
+      (cardInstance) => {
+        confirmPopup.open();
+        confirmPopup.setSubmitAction(() => {
+          api
+            .deleteCard(cardInstance.getId())
+            .then(() => {
+              cardInstance.removeCard();
+              confirmPopup.close();
+            })
+            .catch(console.log);
+        });
+      },
+      userId // Pasamos el ID del usuario actual
+    );
+    return card.generateCard();
+  }
+
+  // ==========================================
+  // SIGUIENTE PASO: INSTANCIAR LA SECCIÓN
+  // ==========================================
+
+  const cardSection = new Section(
+    {
+      items: [], // Empezamos vacío
+      renderer: (item) => {
+        const cardElement = createCard(item); // Usamos la función de arriba
+        cardSection.addItem(cardElement);
+      },
+    },
+    ".cards__list"
+  );
+
+  // ==========================================
+  // CARGA INICIAL (Promise.all)
+  // ==========================================
+
+  Promise.all([api.getUserInfo(), api.getInitialCards()])
+    .then(([userData, cards]) => {
+      userId = userData._id; // Guardamos el ID del servidor
+
+      // Seteamos info del usuario
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+        avatar: userData.avatar,
+      });
+
+      // Renderizamos las tarjetas del servidor
+      cardSection.renderItems(cards);
+    })
+    .catch(console.log);
+
+  // ... (Aquí siguen los PopupWithForm para editar perfil y añadir tarjeta) ...
+});
+
+const confirmPopup = new PopupWithConfirmation("#confirm-popup");
+confirmPopup.setEventListeners();
+
+//Creación de instancias
+const userInfo = new UserInfo({
+  nameSelector: ".profile__title",
+  jobSelector: ".profile__description",
+  avatarSelector: ".profile__image",
+});
+
+const imagePopup = new PopupWithImage("#image-popup");
+imagePopup.setEventListeners();
+
+/*const cardSection = new Section(
     {
       items: [],
       renderer: (item) => {
@@ -119,13 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
               ? api.removeLike(cardInstance.getId())
               : api.addLike(cardInstance.getId());*/
 
-  /*request
+/*request
     .then((updatedCard) => {
       cardInstance.toggleLike(updatedCard.likes.some(
         (user) => user._id === userId));
     })
     .catch((err) => console.log(err));*/
-  /*request
+/*request
     .then((updatedCard) => {
       if (!updatedCard || !Array.isArray(updatedCard.likes)) {
         console.error(
@@ -142,13 +184,13 @@ document.addEventListener("DOMContentLoaded", () => {
       cardInstance.toggleLike(isLiked);
     })
     .catch((err) => console.log(err));*/
-  /*request
+/*request
     .then((updatedCard) => {
       cardInstance.toggleLike(updatedCard.isLiked);
     })
 .catch(console.log);
 },*/
-  /*(cardInstance) => {
+/*(cardInstance) => {
         api
           .deleteCard(cardInstance.getId())
           .then(() => {
@@ -156,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
           })
         .catch((err) => console.log(err));
     },*/
-  /* (cardInstance) => {
+/* (cardInstance) => {
       confirmPopup.open();
 
        confirmPopup.setSubmitAction(() => {
@@ -177,8 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
 ".cards__list"
 );*/
 
-  //llamada a la API
-  /*api
+//llamada a la API
+/*api
     .getUserInfo()
     .then((data) => {
       userId = data._id;
@@ -198,10 +240,10 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((err) => console.log(err));
 */
-  
-  let cardSection;
-  
-  Promise.all([api.getUserInfo(), api.getInitialCards()])
+
+let cardSection;
+
+/*Promise.all([api.getUserInfo(), api.getInitialCards()])
     .then(([userData, cards]) => {
       userId = userData._id;
 
@@ -248,11 +290,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     .catch(console.log);
                 });
               },
-
               userId
             );
-
-            cardSection.addItem(card.generateCard());
+            return card.generateCard();
           },
         },
         ".cards__list"
@@ -270,43 +310,42 @@ document.addEventListener("DOMContentLoaded", () => {
   })
   .catch(console.log);*/
 
-  // --- Controladores de Eventos del Proyecto ---
+// --- Controladores de Eventos del Proyecto ---
 
-  // 1. Manejo de la Modal de Edición de Perfil
-  /*const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+// 1. Manejo de la Modal de Edición de Perfil
+/*const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
     userInfo.setUserInfo({
       name: data.name,
       job: data.description,
     });
   });*/
 
-  const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
-    editProfilePopup.renderLoading(true);
+const editProfilePopup = new PopupWithForm("#edit-popup", (data) => {
+  editProfilePopup.renderLoading(true);
 
-    api
-      .updateUserInfo({
-        name: data.name,
-        about: data.description,
-      })
-      .then((userData) => {
-        userInfo.setUserInfo({
-          name: userData.name,
-          job: userData.about,
-        });
-        editProfilePopup.close();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        editProfilePopup.renderLoading(false);
+  api
+    .updateUserInfo({
+      name: data.name,
+      about: data.description,
+    })
+    .then((userData) => {
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
       });
-  });
+      editProfilePopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      editProfilePopup.renderLoading(false);
+    });
+});
 
-  editProfilePopup.setEventListeners();
+editProfilePopup.setEventListeners();
 
-
-  /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+/*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     api
       .addCard(data)
       .then((cardData) => {
@@ -321,70 +360,91 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   addCardPopup.setEventListeners();
 */
-  
-  const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
-    addCardPopup.renderLoading(true);
 
-    api
-      .addCard({
-        name: data["name"],
-        link: data.link,
-      })
-      .then((cardData) => {
-        const card = new Card(
-          cardData,
-          "#card-template",
-          (cardInfo) => imagePopup.open(cardInfo),
-          
-          (cardInstance) => {
-            const isLiked = cardInstance.isLiked();
-            const request = isLiked
-              ? api.removeLike(cardInstance.getId())
-              : api.addLike(cardInstance.getId());
+const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+  addCardPopup.renderLoading(true);
 
-            request
-              .then((updatedCard) => {
-                cardInstance.toggleLike(updatedCard.isLiked);
-              })
-              .catch(console.log);
-          },
+  api
+    .addCard({
+      name: data["name"],
+      link: data.link,
+    })
+    .then((cardData) => {
+      const card = new Card(
+        cardData,
+        "#card-template",
+        (cardInfo) => imagePopup.open(cardInfo),
 
-          (cardInstance) => {
-            /*api
+        (cardInstance) => {
+          const isLiked = cardInstance.isLiked();
+          const request = isLiked
+            ? api.removeLike(cardInstance.getId())
+            : api.addLike(cardInstance.getId());
+
+          request
+            .then((updatedCard) => {
+              cardInstance.toggleLike(updatedCard.isLiked);
+            })
+            .catch(console.log);
+        },
+
+        (cardInstance) => {
+          /*api
               .deleteCard(cardInstance.getId())
               .then(() => {
                 cardInstance.removeCard();
               })
               .catch(console.log);
           },*/
-            confirmPopup.open();
-            confirmPopup.setSubmitAction(() => {
-              api
-                .deleteCard(cardInstance.getId())
-                .then(() => {
-                  cardInstance.removeCard();
-                  confirmPopup.close();
-                })
-                .catch(console.log);
+          confirmPopup.open();
+          confirmPopup.setSubmitAction(() => {
+            confirmPopup.close();
+            api
+              .deleteCard(cardInstance.getId())
+              .then(() => {
+                cardInstance.removeCard();
+              })
+              .catch(console.log)
+              .finally(() => {
+                confirmPopup.renderLoading(false);
+              });
+          });
+        },
+        (cardInstance) => {
+          cardInstance.disableLike();
+          const request = cardInstance.isLiked()
+            ? api.removeLike(cardInstance.getId())
+            : api.addLike(cardInstance.getId());
+
+          request
+            .then((updatedCard) => {
+              cardInstance.toggleLike(updatedCard.isLiked);
+            })
+            .catch(console.log)
+            .finally(() => {
+              cardInstance.enableLike();
+            })
+            .catch(() => {
+              alert("Error al conectar con el servidor. Intenta de nuevo.");
             });
-          },
-          userId
-        );
+        },
+        userId
+      );
 
-        cardSection.addItem(card.generateCard());
-        addCardPopup.close();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        addCardPopup.renderLoading(false);
-      });
-  });
+      cardSection.addItem(card.generateCard());
+      addCardPopup.close();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      addCardPopup.renderLoading(false);
+    });
+});
 
-  addCardPopup.setEventListeners();
-  
-  /*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
+addCardPopup.setEventListeners();
+
+/*const addCardPopup = new PopupWithForm("#new-card-popup", (data) => {
     const card = new Card(data, "#card-template", (cardData) =>
       imagePopup.open(cardData)
     );
@@ -394,36 +454,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   addCardPopup.setEventListeners();
   */
-  
-  /*imagePopup.open({
+
+/*imagePopup.open({
    name: "Prueba",
    link: "https://placehold.co/600x400",
  });*/
 
-  // --- Inicialización de la Lógica de Validación ---
+// --- Inicialización de la Lógica de Validación ---
 
-  // Instancia de FormValidator para el formulario de Perfil
-  const profileValidator = new FormValidator(validationConfig, formEditProfile);
-  profileValidator.setEventListeners();
+// Instancia de FormValidator para el formulario de Perfil
+const profileValidator = new FormValidator(validationConfig, formEditProfile);
+profileValidator.setEventListeners();
 
-  // Instancia de FormValidator para el formulario de Nueva Tarjeta
-  const newCardValidator = new FormValidator(validationConfig, formAddCard);
-  newCardValidator.setEventListeners();
+// Instancia de FormValidator para el formulario de Nueva Tarjeta
+const newCardValidator = new FormValidator(validationConfig, formAddCard);
+newCardValidator.setEventListeners();
 
-  // 2. Manejo de la Modal de Añadir Tarjeta
-  buttonAddCard.addEventListener("click", () => {
-    newCardValidator.resetValidation();
-    addCardPopup.open();
-  });
-
-  buttonEditProfile.addEventListener("click", () => {
-    const currentUserData = userInfo.getUserInfo();
-    nameInput.value = currentUserData.name;
-    jobInput.value = currentUserData.job;
-
-    profileValidator.resetValidation();
-    editProfilePopup.open();
-  });
-
-  //cardSection.renderItems();
+// 2. Manejo de la Modal de Añadir Tarjeta
+buttonAddCard.addEventListener("click", () => {
+  newCardValidator.resetValidation();
+  addCardPopup.open();
 });
+
+buttonEditProfile.addEventListener("click", () => {
+  const currentUserData = userInfo.getUserInfo();
+  nameInput.value = currentUserData.name;
+  jobInput.value = currentUserData.job;
+
+  profileValidator.resetValidation();
+  editProfilePopup.open();
+});
+
+//cardSection.renderItems();
