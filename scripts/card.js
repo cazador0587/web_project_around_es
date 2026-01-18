@@ -52,6 +52,7 @@ export default class Card {
   // Método para actualizar el estado visual del Like
   toggleLike(isLiked) {
     this._isLiked = isLiked;
+    console.log("Cambiando clase visual. ¿Está activo?:", isLiked);
     if (this._isLiked) {
       this._likeButton.classList.add("card__like-button_is-active");
     } else {

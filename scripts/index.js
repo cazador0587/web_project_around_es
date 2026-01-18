@@ -51,14 +51,25 @@ document.addEventListener("DOMContentLoaded", () => {
           : api.addLike(cardInstance.getId());
 
         request
-          .then((updatedCard) => {
-            // Asegúrate que tu API devuelva los datos correctos
-            if (updatedCard && updatedCard.likes) {
-              const currentlyLiked = updatedCard.likes.some(
-                (u) => u._id === userId
-              );
-              cardInstance.toggleLike(currentlyLiked);
+          .then((data) => {
+            console.log("Datos recibidos:", data);
+
+            // 1. Definimos el estado del Like basándonos en lo que responda la API
+            let currentlyLiked;
+
+            if (data.likes && Array.isArray(data.likes)) {
+              // Caso A: La API devuelve un array de likes
+              currentlyLiked = data.likes.some((u) => (u._id || u) === userId);
+            } else if (typeof data.isLiked !== "undefined") {
+              // Caso B: La API devuelve directamente un booleano isLiked (Tu caso actual)
+              currentlyLiked = data.isLiked;
+            } else {
+              // Caso C: Fallback por si la estructura es distinta
+              currentlyLiked = !isLiked;
             }
+
+            console.log("¿Resultado final del Like?", currentlyLiked);
+            cardInstance.toggleLike(currentlyLiked);
           })
           .catch((err) => console.log("Error al procesar el like:", err))
           .finally(() => cardInstance.enableLike());
