@@ -91,6 +91,21 @@
   margin-top: 32px;
 }
 
+/* Asegúrate de que los botones dentro de actions no midan 100% */
+.popup__actions .popup__button, 
+.popup__actions .popup__button_type_cancel {
+  width: auto; /* Permite que el flex-1 controle el tamaño */
+  flex: 1;     /* Hace que ambos midan lo mismo */
+  margin-top: 0; /* Quita márgenes que puedan desalinearlos */
+}
+
+/* Ajuste específico para el de cancelar si quieres un color distinto */
+.popup__button_type_cancel {
+  background-color: #e74c3c; /* Rojo para cancelar o el color que gustes */
+  color: #fff;
+  border: none;
+}
+
 .popup_is-opened {
   display: flex;
   visibility: visible;

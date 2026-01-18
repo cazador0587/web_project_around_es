@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
           items: cards,
           renderer: (item) => {
             const cardElement = createCard(item);
-            cardSection.addItem(cardElement);
+            return cardElement;
           },
         },
         ".cards__list"
