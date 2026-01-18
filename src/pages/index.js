@@ -1,12 +1,12 @@
-import Api from "./Api.js";
-import { apiConfig } from "./constants.js";
-import Card from "./card.js";
-import Section from "./Section.js";
-import PopupWithImage from "./PopupWithImage.js";
-import PopupWithForm from "./PopupWithForm.js";
-import UserInfo from "./UserInfo.js";
-import FormValidator from "./formValidator.js";
-import PopupWithConfirmation from "./PopupWithConfirmation.js";
+import Api from "../scripts/Api.js";
+import { apiConfig } from "../scripts/constants.js";
+import Card from "../scripts/card.js";
+import Section from "../scripts/Section.js";
+import PopupWithImage from "../scripts/PopupWithImage.js";
+import PopupWithForm from "../scripts/PopupWithForm.js";
+import UserInfo from "../scripts/UserInfo.js";
+import FormValidator from "../scripts/formValidator.js";
+import PopupWithConfirmation from "../scripts/PopupWithConfirmation.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- 1. CONFIGURACIÓN ---
